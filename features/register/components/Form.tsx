@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -22,7 +23,7 @@ export default function FormRegister() {
   // variables
   const router = useRouter();
   const login = useRegister();
-  const { isOnline, checkConnection, lastChecked } = useNetworkStatus();
+  const { isOnline } = useNetworkStatus();
   const loading = login.isPending;
   const { setModalSuccess } = useTheme();
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -72,15 +73,6 @@ export default function FormRegister() {
     }
   };
 
-  const handleRetry = async () => {
-    const isConnected = await checkConnection();
-    if (!isConnected) {
-      // Tetap tampilkan UI yang sudah di cache
-      return;
-    }
-    // Jika online, refresh halaman
-    window.location.reload();
-  };
   return (
     <Form {...form}>
       <form
@@ -121,6 +113,14 @@ export default function FormRegister() {
             />
           )}
         />
+        <div className="text-right text-sm">
+          <p>
+            Sudah punya akun?{" "}
+            <Link href="/auth/login">
+              <span className="text-primary">Masuk</span>
+            </Link>
+          </p>
+        </div>
         <Button type="submit" className="w-full" loading={loading}>
           {isOnline ? "Login" : "Login tidak tersedia (Offline)"}
         </Button>

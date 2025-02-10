@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -106,6 +107,14 @@ export default function FormLogin() {
             <InputPassword placeholder="Masukkan password" {...field} />
           )}
         />
+        <div className="text-right text-sm">
+          <p>
+            Belum punya akun?{" "}
+            <Link href="/auth/register">
+              <span className="text-primary">Daftar Sekarang</span>
+            </Link>
+          </p>
+        </div>
         <Button type="submit" className="w-full" loading={loading}>
           {isOnline ? "Login" : "Login tidak tersedia (Offline)"}
         </Button>
