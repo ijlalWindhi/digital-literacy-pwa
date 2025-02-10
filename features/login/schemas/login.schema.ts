@@ -1,9 +1,9 @@
 import * as z from "zod";
 
 export const LoginSchema = z.object({
-  username: z.string().nonempty("Username is required"),
+  email: z.string().email("Email tidak valid").nonempty("Email wajib diisi"),
   password: z
     .string()
-    .min(8, "Password must be at least 8 characters long")
-    .nonempty("Password is required"),
+    .min(8, "Password minimal 8 karakter")
+    .nonempty("Password wajib diisi"),
 });

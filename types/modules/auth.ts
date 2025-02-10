@@ -9,7 +9,7 @@ export interface IAuthStore {
 
 // Login
 export type TPayloadLogin = {
-  username: string;
+  email: string;
   password: string;
 };
 
