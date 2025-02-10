@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Eye, EyeOff } from "lucide-react";
 
-import { Button } from "../ui/button";
-import { Label } from "../ui/label";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 import { cn } from "@/utils/utils";
 
@@ -55,20 +55,20 @@ const InputPassword = React.forwardRef<HTMLInputElement, InputPasswordProps>(
 
     const getStrengthMessage = (password: string) => {
       if (password.length === 0) {
-        return "Use 8 or more characters with a mix of letters, numbers & symbols";
+        return "Gunakan 8 karakter atau lebih dengan campuran huruf, angka, dan simbol";
       }
 
       const missing = [];
-      if (password.length < 8) missing.push("8+ characters");
-      if (!/[A-Za-z]/.test(password)) missing.push("letters");
-      if (!/[0-9]/.test(password)) missing.push("numbers");
-      if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) missing.push("symbols");
+      if (password.length < 8) missing.push("8+ karakter");
+      if (!/[A-Za-z]/.test(password)) missing.push("huruf");
+      if (!/[0-9]/.test(password)) missing.push("angka");
+      if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) missing.push("simbol");
 
       if (missing.length === 0) {
-        return "Strong password";
+        return "Password kuat!";
       }
 
-      return `Add ${missing.join(", ")} for a stronger password`;
+      return `Berikan ${missing.join(", ")} untuk membuat password lebih kuat`;
     };
 
     const strength = calculateStrength(value as string);
