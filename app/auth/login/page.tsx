@@ -16,16 +16,14 @@ export default function Login() {
     <div className="space-y-4 md:space-y-8 w-full p-4">
       <div className="text-center">
         <p className="text-primary text-xs sm:text-sm md:text-base">
-          LET&apos;S GET STARTED
+          AYO MULAI👋
         </p>
         <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold">
-          Welcome Back🎉
+          Selamat Datang Kembali🎉 <br />
+          Kami Senang Bertemu Anda
         </h1>
-        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold">
-          Ready to Assist You
-        </h2>
         <p className="text-xs sm:text-sm md:text-base">
-          Enter your username and password to get started
+          Masukkan email dan password Anda untuk memulai
         </p>
       </div>
 
