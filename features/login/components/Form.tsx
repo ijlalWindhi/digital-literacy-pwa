@@ -25,7 +25,7 @@ export default function FormLogin() {
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
@@ -59,12 +59,12 @@ export default function FormLogin() {
         className="space-y-4 bg-white rounded-lg p-4 w-full mx-auto sm:w-3/4 md:w-1/2 lg:w-1/3 shadow"
       >
         <InputField
-          name="username"
-          label="Username"
+          name="email"
+          label="Email"
           primary
           control={form.control}
           render={({ field }) => (
-            <Input type="text" placeholder="Enter your username" {...field} />
+            <Input type="text" placeholder="Masukkan email" {...field} />
           )}
         />
         <InputField
@@ -73,11 +73,11 @@ export default function FormLogin() {
           primary
           control={form.control}
           render={({ field }) => (
-            <InputPassword placeholder="Enter your password" {...field} />
+            <InputPassword placeholder="Masukkan password" {...field} />
           )}
         />
         <Button type="submit" className="w-full" loading={loading}>
-          Login
+          Masuk
         </Button>
       </form>
     </Form>
