@@ -70,6 +70,9 @@ export default {
       fontFamily: {
         sans: ["Poppins", "sans-serif"],
       },
+      backgroundImage: {
+        auth: "url('/images/login.webp')",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
