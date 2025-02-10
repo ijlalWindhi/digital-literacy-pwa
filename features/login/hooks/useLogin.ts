@@ -21,20 +21,20 @@ export function useLogin() {
       if (response?.token) {
         setCookies("token", response.token);
 
-        await Promise.all([
-          queryClient.prefetchQuery({
-            queryKey: AUTH_QUERY_KEYS.profile,
-            queryFn: getProfile,
-          }),
-          queryClient.prefetchQuery({
-            queryKey: AUTH_QUERY_KEYS.menu,
-            queryFn: getMenu,
-          }),
-          queryClient.prefetchQuery({
-            queryKey: AUTH_QUERY_KEYS.permissions,
-            queryFn: getPermission,
-          }),
-        ]);
+        // await Promise.all([
+        //   queryClient.prefetchQuery({
+        //     queryKey: AUTH_QUERY_KEYS.profile,
+        //     queryFn: getProfile,
+        //   }),
+        //   queryClient.prefetchQuery({
+        //     queryKey: AUTH_QUERY_KEYS.menu,
+        //     queryFn: getMenu,
+        //   }),
+        //   queryClient.prefetchQuery({
+        //     queryKey: AUTH_QUERY_KEYS.permissions,
+        //     queryFn: getPermission,
+        //   }),
+        // ]);
       }
     },
   });

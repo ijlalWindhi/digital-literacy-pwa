@@ -21,14 +21,13 @@ export const useAuth = create<IAuthStore>()(
       getProfile: async () => {
         try {
           const profile = await getProfile();
-          if (profile.status === 200) {
-            profile.data = profile.data || {};
+          if (profile) {
             setState((state) => ({
               ...state,
-              profile: profile.data,
+              profile: profile,
             }));
           }
-          return profile.data || {};
+          return profile || {};
         } catch (error) {
           console.error("Error store getProfile:", error);
           throw error;
@@ -38,9 +37,9 @@ export const useAuth = create<IAuthStore>()(
         try {
           const permissions = await getPermissions();
           let flattenedPermissions: TResponsePermission[] = [];
-          if (permissions.status === 200) {
-            permissions.data = permissions.data || [];
-            flattenedPermissions = permissions.data.results.flat();
+          if (permissions.results) {
+            permissions.results = permissions.results || [];
+            flattenedPermissions = permissions.results.flat();
             setState((state) => ({
               ...state,
               permission: flattenedPermissions || [],
@@ -56,9 +55,9 @@ export const useAuth = create<IAuthStore>()(
         try {
           const menus = await getMenu();
           let flattenedMenus: TResponseMenu[] = [];
-          if (menus.status === 200) {
-            menus.data = menus.data || [];
-            flattenedMenus = menus.data.results.flat();
+          if (menus.results) {
+            menus.results = menus.results || [];
+            flattenedMenus = menus.results.flat();
             setState((state) => ({
               ...state,
               menu: flattenedMenus || [],
