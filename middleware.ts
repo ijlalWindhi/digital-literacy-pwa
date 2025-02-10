@@ -6,6 +6,8 @@ const publicPages = ["/auth/login", "/manifest.json"];
 // Define public assets paths that should always be accessible
 const publicAssets = [
   "/images",
+  "/icons",
+  "/screenshots",
   "/fonts",
   "/public",
   "/favicon.ico",

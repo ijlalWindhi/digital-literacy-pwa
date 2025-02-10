@@ -31,7 +31,7 @@ function AuthLayout({
           alt="Logo"
           width={200}
           height={200}
-          className="absolute w-16 top-4 left-1/2 transform -translate-x-1/2 sm:left-10 sm:translate-x-0 lg:top-4 lg:left-10 lg:w-20 xl:w-32"
+          className="absolute w-24 top-4 left-1/2 transform -translate-x-1/2 sm:left-10 sm:translate-x-0 lg:top-4 lg:left-10 lg:w-20 xl:w-32"
         />
       </Link>
       <div className="w-full h-auto absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">

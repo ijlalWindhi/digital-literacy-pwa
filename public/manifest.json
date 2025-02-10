@@ -1,7 +1,8 @@
 {
-    "name": "Next.js PWA App",
-    "short_name": "Next PWA",
-    "description": "Progressive Web App dengan Next.js 15",
+    "name": "Digital Literacy - DhisaPro",
+    "short_name": "DigiLit",
+    "description":
+      "Digital Literacy is a website that provides information about digital literacy, digital skills, and digital tools.",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
@@ -11,13 +12,30 @@
         "src": "/icons/icon-192x192.png",
         "sizes": "192x192",
         "type": "image/png",
-        "purpose": "any maskable"
+        "purpose": "any"
       },
       {
         "src": "/icons/icon-512x512.png",
         "sizes": "512x512",
         "type": "image/png",
-        "purpose": "any maskable"
+        "purpose": "any"
       }
-    ]
+    ],
+    "screenshots": [
+      {
+        "src": "/screenshots/desktop.png",
+        "sizes": "1365x685",
+        "type": "image/png",
+        "form_factor": "wide",
+        "label": "Desktop view of Digital Literacy"
+      },
+      {
+        "src": "/screenshots/mobile.png",
+        "sizes": "327x585",
+        "type": "image/png",
+        "form_factor": "narrow",
+        "label": "Mobile view of Digital Literacy"
+      }
+    ],
+    "id": "/"
   }
