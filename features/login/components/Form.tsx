@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -16,12 +16,13 @@ import useTheme from "@/stores/theme";
 import { useLogin } from "../hooks/useLogin";
 import { LoginSchema } from "../schemas/login.schema";
 import { toast } from "@/hooks/use-toast";
+import useNetworkStatus from "@/hooks/use-network-status";
 
 export default function FormLogin() {
   // variables
   const router = useRouter();
   const login = useLogin();
-  const [isOnline, setIsOnline] = useState(true);
+  const { isOnline, checkConnection, lastChecked } = useNetworkStatus();
   const loading = login.isPending;
   const { setModalSuccess } = useTheme();
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -71,29 +72,28 @@ export default function FormLogin() {
     }
   };
 
-  // lifecycle
-  useEffect(() => {
-    setIsOnline(navigator.onLine);
-
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  }, []);
+  const handleRetry = async () => {
+    const isConnected = await checkConnection();
+    if (!isConnected) {
+      // Tetap tampilkan UI yang sudah di cache
+      return;
+    }
+    // Jika online, refresh halaman
+    window.location.reload();
+  };
 
   return !isOnline ? (
     <div className="text-center p-4 bg-yellow-50 rounded-lg">
-      <p className="text-yellow-700">
+      <p className="text-yellow-700 text-sm md:text-base">
         Anda sedang offline. Beberapa fitur login mungkin tidak tersedia.
+        {lastChecked && (
+          <span className="text-xs block mt-1">
+            Terakhir dicek: {lastChecked.toLocaleTimeString()}
+          </span>
+        )}
       </p>
       <button
-        onClick={() => window.location.reload()}
+        onClick={handleRetry}
         className="mt-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700"
       >
         Coba Lagi
