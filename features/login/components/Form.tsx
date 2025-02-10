@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,11 +15,13 @@ import { Button } from "@/components/ui/button";
 import useTheme from "@/stores/theme";
 import { useLogin } from "../hooks/useLogin";
 import { LoginSchema } from "../schemas/login.schema";
+import { toast } from "@/hooks/use-toast";
 
 export default function FormLogin() {
   // variables
   const router = useRouter();
   const login = useLogin();
+  const [isOnline, setIsOnline] = useState(true);
   const loading = login.isPending;
   const { setModalSuccess } = useTheme();
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -33,14 +35,23 @@ export default function FormLogin() {
   // functions
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     try {
+      if (!isOnline) {
+        toast({
+          title: "Mode Offline",
+          description: "Tidak dapat melakukan login dalam mode offline",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const res = await login.mutateAsync(values);
       if (res) {
         setModalSuccess({
           open: true,
-          title: "Login Success",
-          message: "Welcome back! You're successfully logged in",
+          title: "Selamat Datang Kembali!",
+          message: "Anda berhasil login ke dalam aplikasi.",
           actionVariant: "default",
-          actionMessage: "Go to Dashboard",
+          actionMessage: "Kembali ke Beranda",
           action: () => {
             router.push("/");
           },
@@ -48,11 +59,47 @@ export default function FormLogin() {
         });
       }
     } catch (error) {
+      if (!navigator.onLine) {
+        toast({
+          title: "Koneksi Terputus",
+          description: "Koneksi terputus. Mohon periksa koneksi internet Anda.",
+          variant: "destructive",
+        });
+        alert("Koneksi terputus. Mohon periksa koneksi internet Anda.");
+      }
       console.error("Error from onSubmit: ", error);
     }
   };
 
-  return (
+  // lifecycle
+  useEffect(() => {
+    setIsOnline(navigator.onLine);
+
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  return !isOnline ? (
+    <div className="text-center p-4 bg-yellow-50 rounded-lg">
+      <p className="text-yellow-700">
+        Anda sedang offline. Beberapa fitur login mungkin tidak tersedia.
+      </p>
+      <button
+        onClick={() => window.location.reload()}
+        className="mt-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700"
+      >
+        Coba Lagi
+      </button>
+    </div>
+  ) : (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
@@ -77,7 +124,7 @@ export default function FormLogin() {
           )}
         />
         <Button type="submit" className="w-full" loading={loading}>
-          Masuk
+          {isOnline ? "Login" : "Login tidak tersedia (Offline)"}
         </Button>
       </form>
     </Form>
