@@ -27,7 +27,7 @@ function AuthLayout({
       <ModalSuccess />
       <Link href="/auth/login">
         <Image
-          src={"/images/logo.svg"}
+          src={"/images/logo.webp"}
           alt="Logo"
           width={200}
           height={200}
