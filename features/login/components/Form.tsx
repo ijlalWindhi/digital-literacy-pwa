@@ -67,7 +67,6 @@ export default function FormLogin() {
           description: "Koneksi terputus. Mohon periksa koneksi internet Anda.",
           variant: "destructive",
         });
-        alert("Koneksi terputus. Mohon periksa koneksi internet Anda.");
       }
       console.error("Error from onSubmit: ", error);
     }

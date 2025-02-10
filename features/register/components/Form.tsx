@@ -67,7 +67,6 @@ export default function FormRegister() {
           description: "Koneksi terputus. Mohon periksa koneksi internet Anda.",
           variant: "destructive",
         });
-        alert("Koneksi terputus. Mohon periksa koneksi internet Anda.");
       }
       console.error("Error from onSubmit: ", error);
     }
@@ -122,7 +121,7 @@ export default function FormRegister() {
           </p>
         </div>
         <Button type="submit" className="w-full" loading={loading}>
-          {isOnline ? "Login" : "Login tidak tersedia (Offline)"}
+          {isOnline ? "Daftar" : "Daftar tidak tersedia (Offline)"}
         </Button>
       </form>
     </Form>
