@@ -5,6 +5,7 @@ import {
   updateUser,
   deleteUser,
 } from "@/app/actions/users";
+import { TUsers } from "@/types";
 
 export function useUsers() {
   return useQuery({
@@ -17,15 +18,7 @@ export function useUsers() {
 export function useAddUser() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      uid,
-      name,
-      email,
-    }: {
-      uid: string;
-      name: string;
-      email: string;
-    }) => addUser(uid, name, email),
+    mutationFn: (data: TUsers) => addUser(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
