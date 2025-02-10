@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Loader2 } from "lucide-react";
 import { Poppins } from "next/font/google";
 
@@ -32,9 +32,14 @@ export const metadata: Metadata = {
   },
   icons: [{ rel: "apple-touch-icon", url: "/icons/icon-192x192.png" }],
   manifest: "/manifest.json",
-  themeColor: "#000000",
-  viewport:
-    "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
+};
+
+export const viewport: Viewport = {
+  themeColor: "black",
+  minimumScale: 1,
+  initialScale: 1,
+  width: "device-width",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
