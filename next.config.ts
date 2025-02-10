@@ -1,11 +1,14 @@
 import type { NextConfig } from "next";
+import type { PWAConfig } from 'next-pwa'
 
-const withPWA = require('next-pwa')({
+const pwaConfig: PWAConfig = {
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
   register: true,
   skipWaiting: true
-})
+}
+
+const withPWA = require('next-pwa')(pwaConfig)
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -17,7 +20,7 @@ const nextConfig: NextConfig = {
           { key: "Vary", value: "Origin" },
           {
             key: "Access-Control-Allow-Origin",
-            value: process.env.NEXT_PUBLIC_APP_URL || "", // Only allow this origin
+            value: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000", // Only allow this origin
           },
           {
             key: "Access-Control-Allow-Methods",
@@ -73,6 +76,15 @@ const nextConfig: NextConfig = {
           {
             key: "Cache-Control",
             value: "no-store, no-cache, must-revalidate, private",
+          },
+        ],
+      },
+      {
+        source: "/images/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, must-revalidate",
           },
         ],
       },
