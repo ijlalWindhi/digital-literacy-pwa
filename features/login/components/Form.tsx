@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 
 import useTheme from "@/stores/theme";
 import { useLogin } from "@/hooks/use-auth";
-import { LoginSchema } from "../schemas/login.schema";
+import { LoginSchema } from "@/utils/schema/login.schema";
 import { toast } from "@/hooks/use-toast";
 import useNetworkStatus from "@/hooks/use-network-status";
 

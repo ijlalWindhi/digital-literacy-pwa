@@ -10,14 +10,22 @@ import {
   collection,
 } from "firebase/firestore";
 
+import { TUsers } from "@/types/modules/users";
+import { toast } from "@/hooks/use-toast";
+
 const usersCollection = collection(db, "users");
 
-export async function addUser(uid: string, name: string, email: string) {
+export async function addUser(data: TUsers) {
   try {
-    await setDoc(doc(usersCollection, uid), { uid, name, email });
+    await setDoc(doc(usersCollection, data?.uid), data);
     return { success: true };
   } catch (error) {
     if (error instanceof Error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
       throw new Error(error.message);
     } else {
       throw new Error("An unknown error occurred");
@@ -28,9 +36,14 @@ export async function addUser(uid: string, name: string, email: string) {
 export async function listUsers() {
   try {
     const querySnapshot = await getDocs(usersCollection);
-    return querySnapshot.docs.map((doc) => doc.data());
+    return querySnapshot.docs.map((doc) => doc.data()) as TUsers[];
   } catch (error) {
     if (error instanceof Error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
       throw new Error(error.message);
     } else {
       throw new Error("An unknown error occurred");
@@ -38,16 +51,18 @@ export async function listUsers() {
   }
 }
 
-export async function updateUser(
-  uid: string,
-  data: Partial<{ name: string; email: string }>,
-) {
+export async function updateUser(uid: string, data: Partial<TUsers>) {
   try {
     const userRef = doc(usersCollection, uid);
     await updateDoc(userRef, data);
     return { success: true };
   } catch (error) {
     if (error instanceof Error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
       throw new Error(error.message);
     } else {
       throw new Error("An unknown error occurred");
@@ -61,6 +76,11 @@ export async function deleteUser(uid: string) {
     return { success: true };
   } catch (error) {
     if (error instanceof Error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
       throw new Error(error.message);
     } else {
       throw new Error("An unknown error occurred");

@@ -1,12 +1,29 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { registerUser, loginUser, logoutUser } from "@/app/actions/auth";
+import { addUser } from "@/app/actions/users";
 import { setCookies } from "@/utils/cookie";
 
 export function useRegister() {
   return useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       registerUser(email, password),
+    onSuccess: (response) => {
+      if (response) {
+        addUser({
+          uid: response.uid,
+          email: response.email ?? "",
+          username: "",
+          name: "",
+          is_active: true,
+          image: "",
+          role: {
+            id: 2,
+            nama: "user",
+          },
+        });
+      }
+    },
   });
 }
 

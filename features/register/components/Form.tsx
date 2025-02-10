@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 
 import useTheme from "@/stores/theme";
 import { useRegister } from "@/hooks/use-auth";
-import { RegisterSchema } from "../schemas/register.schema";
+import { RegisterSchema } from "@/utils/schema/register.schema";
 import { toast } from "@/hooks/use-toast";
 import useNetworkStatus from "@/hooks/use-network-status";
 

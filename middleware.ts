@@ -16,30 +16,30 @@ const publicAssets = [
 ];
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get(
-    `${process.env.NEXT_PUBLIC_STORAGE_NAME}_token`,
-  )?.value;
-  const path = request.nextUrl.pathname;
+  // const token = request.cookies.get(
+  //   `${process.env.NEXT_PUBLIC_STORAGE_NAME}_token`,
+  // )?.value;
+  // const path = request.nextUrl.pathname;
 
-  // Check if the current path is for public assets
-  const isPublicAsset = publicAssets.some((asset) => path.startsWith(asset));
-  if (isPublicAsset) {
-    return NextResponse.next();
-  }
+  // // Check if the current path is for public assets
+  // const isPublicAsset = publicAssets.some((asset) => path.startsWith(asset));
+  // if (isPublicAsset) {
+  //   return NextResponse.next();
+  // }
 
-  // Check if the current path is an auth page
-  const isAuthPage = publicPages.includes(path);
+  // // Check if the current path is an auth page
+  // const isAuthPage = publicPages.includes(path);
 
-  // If user has token and tries to access auth pages
-  if (token && isAuthPage) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
+  // // If user has token and tries to access auth pages
+  // if (token && isAuthPage) {
+  //   return NextResponse.redirect(new URL("/", request.url));
+  // }
 
-  // If user doesn't have token and tries to access protected pages
-  if (!token && !isAuthPage) {
-    const redirectUrl = new URL("/auth/login", request.url);
-    return NextResponse.redirect(redirectUrl);
-  }
+  // // If user doesn't have token and tries to access protected pages
+  // if (!token && !isAuthPage) {
+  //   const redirectUrl = new URL("/auth/login", request.url);
+  //   return NextResponse.redirect(redirectUrl);
+  // }
 
   // Allow the request to proceed
   return NextResponse.next();
