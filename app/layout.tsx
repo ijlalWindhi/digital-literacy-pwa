@@ -30,6 +30,11 @@ export const metadata: Metadata = {
     locale: METADATA.openGraph.locale,
     type: "website",
   },
+  icons: [{ rel: "apple-touch-icon", url: "/icons/icon-192x192.png" }],
+  manifest: "/manifest.json",
+  themeColor: "#000000",
+  viewport:
+    "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
 };
 
 export default function RootLayout({
