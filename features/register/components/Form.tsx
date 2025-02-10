@@ -14,7 +14,7 @@ import { InputField } from "@/components/common/input-field";
 import { Button } from "@/components/ui/button";
 
 import useTheme from "@/stores/theme";
-import { useRegister } from "../hooks/useRegister";
+import { useRegister } from "@/hooks/use-auth";
 import { RegisterSchema } from "../schemas/register.schema";
 import { toast } from "@/hooks/use-toast";
 import useNetworkStatus from "@/hooks/use-network-status";
@@ -22,9 +22,9 @@ import useNetworkStatus from "@/hooks/use-network-status";
 export default function FormRegister() {
   // variables
   const router = useRouter();
-  const login = useRegister();
+  const register = useRegister();
   const { isOnline } = useNetworkStatus();
-  const loading = login.isPending;
+  const loading = register.isPending;
   const { setModalSuccess } = useTheme();
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -40,22 +40,23 @@ export default function FormRegister() {
       if (!isOnline) {
         toast({
           title: "Mode Offline",
-          description: "Tidak dapat melakukan login dalam mode offline",
+          description: "Tidak dapat melakukan register dalam mode offline",
           variant: "destructive",
         });
         return;
       }
 
-      const res = await login.mutateAsync(values);
+      const res = await register.mutateAsync(values);
       if (res) {
         setModalSuccess({
           open: true,
-          title: "Selamat Datang Kembali!",
-          message: "Anda berhasil login ke dalam aplikasi.",
+          title: "Pendaftaran Berhasil",
+          message:
+            "Anda berhasil mendaftar akun. Silahkan login untuk melanjutkan.",
           actionVariant: "default",
-          actionMessage: "Kembali ke Beranda",
+          actionMessage: "Kembali ke halaman login",
           action: () => {
-            router.push("/");
+            router.push("/auth/login");
           },
           animation: "success",
         });

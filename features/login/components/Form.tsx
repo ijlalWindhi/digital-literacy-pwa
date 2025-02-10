@@ -14,7 +14,7 @@ import { InputField } from "@/components/common/input-field";
 import { Button } from "@/components/ui/button";
 
 import useTheme from "@/stores/theme";
-import { useLogin } from "../hooks/useLogin";
+import { useLogin } from "@/hooks/use-auth";
 import { LoginSchema } from "../schemas/login.schema";
 import { toast } from "@/hooks/use-toast";
 import useNetworkStatus from "@/hooks/use-network-status";
@@ -23,7 +23,7 @@ export default function FormLogin() {
   // variables
   const router = useRouter();
   const login = useLogin();
-  const { isOnline, checkConnection, lastChecked } = useNetworkStatus();
+  const { isOnline } = useNetworkStatus();
   const loading = login.isPending;
   const { setModalSuccess } = useTheme();
   const form = useForm<z.infer<typeof LoginSchema>>({
