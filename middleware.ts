@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 // Define auth-related pages
-const publicPages = ["/auth/login", "/manifest.json"];
+const publicPages = ["/auth/login", "/auth/register", "/manifest.json"];
 
 // Define public assets paths that should always be accessible
 const publicAssets = [
