@@ -72,34 +72,17 @@ export default function FormLogin() {
     }
   };
 
-  const handleRetry = async () => {
-    const isConnected = await checkConnection();
-    if (!isConnected) {
-      // Tetap tampilkan UI yang sudah di cache
-      return;
-    }
-    // Jika online, refresh halaman
-    window.location.reload();
-  };
+  // const handleRetry = async () => {
+  //   const isConnected = await checkConnection();
+  //   if (!isConnected) {
+  //     // Tetap tampilkan UI yang sudah di cache
+  //     return;
+  //   }
+  //   // Jika online, refresh halaman
+  //   window.location.reload();
+  // };
 
-  return !isOnline ? (
-    <div className="text-center p-4 bg-yellow-50 rounded-lg">
-      <p className="text-yellow-700 text-sm md:text-base">
-        Anda sedang offline. Beberapa fitur login mungkin tidak tersedia.
-        {lastChecked && (
-          <span className="text-xs block mt-1">
-            Terakhir dicek: {lastChecked.toLocaleTimeString()}
-          </span>
-        )}
-      </p>
-      <button
-        onClick={handleRetry}
-        className="mt-2 px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700"
-      >
-        Coba Lagi
-      </button>
-    </div>
-  ) : (
+  return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
