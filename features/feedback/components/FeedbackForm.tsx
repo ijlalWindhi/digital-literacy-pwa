@@ -30,6 +30,7 @@ import { useAddFeedback } from "@/hooks/use-feedback";
 import useAuth from "@/stores/auth";
 import useTheme from "@/stores/theme";
 import { toast } from "@/hooks/use-toast";
+import useNetworkStatus from "@/hooks/use-network-status";
 
 const aspectOptions = [
   "Kualitas Konten",
@@ -58,6 +59,7 @@ export default function FeedbackForm() {
   const addFeedback = useAddFeedback();
   const { me } = useAuth();
   const { setModalSuccess } = useTheme();
+  const { isOnline } = useNetworkStatus();
 
   const form = useForm<TFeedbackForm>({
     resolver: zodResolver(formSchema),
@@ -215,7 +217,11 @@ export default function FeedbackForm() {
             />
 
             <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Mengirim..." : "Kirim Feedback"}
+              {isOnline
+                ? isSubmitting
+                  ? "Mengirim..."
+                  : "Kirim Feedback"
+                : "Feedback tidak tersedia (Offline)"}
             </Button>
           </form>
         </Form>
