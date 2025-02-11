@@ -36,7 +36,7 @@ export async function loginUser(email: string, password: string) {
       password,
     );
     const accessToken = await userCredential.user.getIdToken();
-    return { accessToken };
+    return { accessToken, user: userCredential.user };
   } catch (error) {
     if (error instanceof Error) {
       toast({

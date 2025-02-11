@@ -4,6 +4,7 @@ import { db } from "@/utils/firebase";
 import {
   doc,
   setDoc,
+  getDoc,
   getDocs,
   deleteDoc,
   updateDoc,
@@ -19,6 +20,29 @@ export async function addUser(data: TUsers) {
   try {
     await setDoc(doc(usersCollection, data?.uid), data);
     return { success: true };
+  } catch (error) {
+    if (error instanceof Error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+      throw new Error(error.message);
+    } else {
+      throw new Error("An unknown error occurred");
+    }
+  }
+}
+
+export async function getUser(uid: string) {
+  try {
+    const userRef = doc(usersCollection, uid);
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+      return userDoc.data() as TUsers;
+    } else {
+      throw new Error("User not found");
+    }
   } catch (error) {
     if (error instanceof Error) {
       toast({
