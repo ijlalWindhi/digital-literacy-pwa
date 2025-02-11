@@ -135,22 +135,52 @@ export function useIncrementCommentLikeCount() {
       commentId: string;
       userId: string;
     }) => incrementCommentLikeCount(commentId, userId),
-    onSuccess: (_, { commentId, userId }) => {
-      queryClient.setQueryData(
-        ["forum-comment", commentId],
-        (oldData: TForum) => {
-          if (!oldData) return oldData;
-          const userLikes = oldData.user_likes || [];
-          const hasLiked = userLikes.includes(userId);
-          return {
-            ...oldData,
-            likes: hasLiked ? oldData.likes - 1 : oldData.likes + 1,
-            user_likes: hasLiked
-              ? userLikes.filter((id) => id !== userId)
-              : [...userLikes, userId],
-          };
-        },
-      );
+    onMutate: async ({ commentId, userId }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["forum-comments"] });
+
+      // Get the current comment data
+      const comments = queryClient.getQueriesData({
+        queryKey: ["forum-comments"],
+      });
+
+      // For each matching query, update the comment
+      comments.forEach(([queryKey, oldData]) => {
+        if (!Array.isArray(oldData)) return;
+
+        queryClient.setQueryData(
+          queryKey,
+          oldData.map((comment) => {
+            if (comment.id !== commentId) return comment;
+
+            const userLikes: string[] = comment.user_likes || [];
+            const hasLiked = userLikes.includes(userId);
+
+            return {
+              ...comment,
+              likes: hasLiked ? comment.likes - 1 : comment.likes + 1,
+              user_likes: hasLiked
+                ? userLikes.filter((id) => id !== userId)
+                : [...userLikes, userId],
+            };
+          }),
+        );
+      });
+
+      // Return context with the old data
+      return { comments };
+    },
+    onError: (err, variables, context) => {
+      // If the mutation fails, use the context we saved to roll back
+      if (context?.comments) {
+        context.comments.forEach(([queryKey, oldData]) => {
+          queryClient.setQueryData(queryKey, oldData);
+        });
+      }
+    },
+    onSettled: () => {
+      // Always refetch after error or success to ensure data consistency
+      queryClient.invalidateQueries({ queryKey: ["forum-comments"] });
     },
   });
 }

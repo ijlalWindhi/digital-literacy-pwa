@@ -1,12 +1,12 @@
 "use client";
+import { useState } from "react";
 import { ThumbsUp } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { id } from "date-fns/locale";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 
 import {
   useIncrementCommentLikeCount,
@@ -16,25 +16,29 @@ import { toast } from "@/hooks/use-toast";
 import useAuth from "@/stores/auth";
 
 interface ThreadRepliesProps {
-  threadId: string;
+  readonly threadId: string;
 }
 
 export default function ThreadReplies({ threadId }: ThreadRepliesProps) {
   // variables
-  const { data: replies, isLoading } = useForumComments(threadId);
+  const [loadingStates, setLoadingStates] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const { data: replies } = useForumComments(threadId);
   const incrementCommentLikeCount = useIncrementCommentLikeCount();
-  const loadingLike = incrementCommentLikeCount.isPending;
   const { me } = useAuth();
 
   // functions
-  const handleLike = (commentId: string) => {
+  const handleLike = async (commentId: string) => {
+    if (!me) return;
+
     try {
-      if (me) {
-        incrementCommentLikeCount.mutate({
-          commentId,
-          userId: me.uid,
-        });
-      }
+      setLoadingStates((prev) => ({ ...prev, [commentId]: true }));
+
+      await incrementCommentLikeCount.mutateAsync({
+        commentId,
+        userId: me.uid,
+      });
     } catch (error) {
       console.error("Error from handleLike: ", error);
       toast({
@@ -42,6 +46,8 @@ export default function ThreadReplies({ threadId }: ThreadRepliesProps) {
         description: "Gagal menyukai balasan",
         variant: "destructive",
       });
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, [commentId]: false }));
     }
   };
 
@@ -73,11 +79,12 @@ export default function ThreadReplies({ threadId }: ThreadRepliesProps) {
                     <Button
                       variant="ghost"
                       size="sm"
-                      loading={loadingLike}
+                      loading={loadingStates[reply.id]}
                       onClick={() => handleLike(reply.id)}
+                      disabled={loadingStates[reply.id]}
                     >
                       <ThumbsUp
-                        className="h-4 w-4 mr-2 "
+                        className="h-4 w-4 mr-2"
                         color={
                           reply?.user_likes?.includes(me?.uid) ? "red" : "gray"
                         }
