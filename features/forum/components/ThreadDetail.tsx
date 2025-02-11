@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ThumbsUp, MessageCircle, Flag, Share2 } from "lucide-react";
+import { ThumbsUp, MessageCircle } from "lucide-react";
 
 interface ThreadDetailProps {
   threadId: string;
