@@ -148,10 +148,11 @@ function ModalUpdate() {
                   type="button"
                   variant="secondary"
                   onClick={() => setModalEditProfile(false)}
+                  loading={isSubmitting}
                 >
                   Batal
                 </Button>
-                <Button type="submit" variant="default">
+                <Button type="submit" variant="default" loading={isSubmitting}>
                   Simpan
                 </Button>
               </div>
