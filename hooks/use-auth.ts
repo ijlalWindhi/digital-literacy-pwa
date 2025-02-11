@@ -2,8 +2,9 @@ import { useMutation } from "@tanstack/react-query";
 
 import { registerUser, loginUser, logoutUser } from "@/app/actions/auth";
 import { addUser, getUser } from "@/app/actions/users";
-import { setCookies } from "@/utils/cookie";
+import { deleteCookie, setCookies } from "@/utils/cookie";
 import useAuth from "@/stores/auth";
+import { TUsers } from "@/types";
 
 export function useRegister() {
   return useMutation({
@@ -46,5 +47,10 @@ export function useLogin() {
 export function useLogout() {
   return useMutation({
     mutationFn: () => logoutUser(),
+    onSuccess: async () => {
+      await useAuth.getState().setMe({} as TUsers);
+      await deleteCookie("token");
+      window.location.href = "/auth/login";
+    },
   });
 }
