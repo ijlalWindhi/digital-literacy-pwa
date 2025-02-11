@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -22,9 +24,9 @@ export default function FeedbackForm() {
       <CardContent>
         <form className="space-y-6">
           <div className="space-y-4">
-            <h3 className="font-medium text-sm md:text-base">
+            <Label htmlFor="satisfaction">
               Bagaimana kepuasan Anda terhadap materi belajar?
-            </h3>
+            </Label>
             <RadioGroup
               defaultValue="satisfied"
               className="flex flex-wrap sm:space-x-1 md:space-x-2 lg:space-x-4"
