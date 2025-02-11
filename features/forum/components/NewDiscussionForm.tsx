@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -57,7 +59,9 @@ export default function NewDiscussionForm() {
             />
           </div>
           <div className="flex justify-end gap-2">
-            <Button variant="outline">Batal</Button>
+            <Link href="/forum">
+              <Button variant="outline">Batal</Button>
+            </Link>
             <Button>Buat Diskusi</Button>
           </div>
         </form>
