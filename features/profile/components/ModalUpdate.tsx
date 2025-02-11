@@ -153,7 +153,7 @@ function ModalUpdate() {
                   Batal
                 </Button>
                 <Button type="submit" variant="default" loading={isSubmitting}>
-                  Simpan
+                  {isOnline ? "Simpan" : "Simpan tidak tersedia (Offline)"}
                 </Button>
               </div>
             </form>
