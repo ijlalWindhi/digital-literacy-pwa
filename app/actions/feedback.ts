@@ -11,13 +11,13 @@ import {
   orderBy,
 } from "firebase/firestore";
 
-import { TFeedback } from "@/types/modules/feedback";
+import { TFeedback, TFeedbackPayload } from "@/types/modules/feedback";
 import { toast } from "@/hooks/use-toast";
 
 const feedbackCollection = collection(db, "feedbacks");
 const feedbackQuery = query(feedbackCollection, orderBy("createdAt", "desc"));
 
-export async function addFeedback(data: TFeedback) {
+export async function addFeedback(data: TFeedbackPayload) {
   try {
     const feedbackWithTimestamp = {
       ...data,

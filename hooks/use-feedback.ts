@@ -4,7 +4,7 @@ import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 
 import { addFeedback } from "@/app/actions/feedback";
 import { db } from "@/utils/firebase";
-import { TFeedback } from "@/types";
+import { TFeedback, TFeedbackPayload } from "@/types";
 
 export function useFeedback() {
   const [feedbacks, setFeedbacks] = useState<TFeedback[]>([]);
@@ -38,7 +38,7 @@ export function useFeedback() {
 export function useAddFeedback() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: TFeedback) => addFeedback(data),
+    mutationFn: (data: TFeedbackPayload) => addFeedback(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["feedbacks"] });
     },
