@@ -1,6 +1,8 @@
 import React from "react";
 import { Metadata } from "next";
 
+import Home from "@/features/home";
+
 import { METADATA } from "@/constants/metadata";
 
 export const metadata: Metadata = {
@@ -12,9 +14,5 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  return (
-    <div>
-      <h1>Home</h1>
-    </div>
-  );
+  return <Home />;
 }
