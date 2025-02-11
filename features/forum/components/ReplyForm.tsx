@@ -10,7 +10,9 @@ export default function ReplyForm({ threadId }: ReplyFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Tulis Balasan</CardTitle>
+        <CardTitle className="text-sm md:text-base font-bold">
+          Tulis Balasan
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <form className="space-y-4">

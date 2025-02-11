@@ -39,30 +39,29 @@ export default function ThreadDetail({ threadId }: ThreadDetailProps) {
       <CardHeader className="border-b">
         <div className="flex flex-col space-y-4">
           <div className="flex items-center justify-between">
-            <Badge>{thread.category}</Badge>
-            <span className="text-sm text-muted-foreground">
+            <Badge className="text-xs">{thread.category}</Badge>
+            <span className="text-xs text-muted-foreground">
               {thread.createdAt}
             </span>
           </div>
-          <h1 className="text-2xl font-bold">{thread.title}</h1>
+          <h1 className="text-base md:text-lg font-bold">{thread.title}</h1>
         </div>
       </CardHeader>
       <CardContent className="pt-6">
         <div className="flex flex-col md:flex-row gap-6">
-          <div className="flex md:flex-col items-center md:items-center gap-4 md:w-32">
-            <Avatar className="h-12 w-12">
+          <div className="flex md:flex-col items-center md:items-center md:w-32">
+            <Avatar className="h-10 w-10">
               <AvatarImage src={thread.author.avatar} />
               <AvatarFallback>{thread.author.name[0]}</AvatarFallback>
             </Avatar>
-            <div className="text-center">
-              <div className="font-semibold">{thread.author.name}</div>
-              <Badge variant="secondary">{thread.author.role}</Badge>
+            <div className="text-sm font-semibold text-center">
+              {thread.author.name}
             </div>
           </div>
           <div className="flex-1 space-y-4">
             <div className="prose max-w-none">
               {thread.content.split("\n").map((paragraph, index) => (
-                <p key={index} className="mb-4">
+                <p key={index} className="mb-2 text-xs md:text-sm">
                   {paragraph}
                 </p>
               ))}
@@ -75,14 +74,6 @@ export default function ThreadDetail({ threadId }: ThreadDetailProps) {
               <Button variant="ghost" size="sm">
                 <MessageCircle className="h-4 w-4 mr-2" />
                 {thread.replies} Balasan
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Share2 className="h-4 w-4 mr-2" />
-                Bagikan
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Flag className="h-4 w-4 mr-2" />
-                Laporkan
               </Button>
             </div>
           </div>

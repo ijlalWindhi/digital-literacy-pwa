@@ -38,26 +38,25 @@ export default function ThreadReplies({ threadId }: ThreadRepliesProps) {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold">Balasan ({replies.length})</h2>
+      <h2 className="text-sm md:text-base font-bold">
+        Balasan ({replies.length})
+      </h2>
       {replies.map((reply) => (
         <Card key={reply.id}>
           <CardContent className="pt-6">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="flex md:flex-col items-center md:items-center gap-4 md:w-32">
-                <Avatar className="h-10 w-10">
+                <Avatar className="h-8 w-8">
                   <AvatarImage src={reply.author.avatar} />
                   <AvatarFallback>{reply.author.name[0]}</AvatarFallback>
                 </Avatar>
-                <div className="text-center">
-                  <div className="font-semibold">{reply.author.name}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {reply.author.role}
-                  </div>
+                <div className="text-sm font-semibold text-center">
+                  {reply.author.name}
                 </div>
               </div>
               <div className="flex-1 space-y-4">
                 <div className="prose max-w-none">
-                  <p>{reply.content}</p>
+                  <p className="text-xs md:text-sm">{reply.content}</p>
                 </div>
                 <div className="flex items-center justify-between pt-4 border-t">
                   <div className="flex items-center gap-4">
@@ -65,12 +64,8 @@ export default function ThreadReplies({ threadId }: ThreadRepliesProps) {
                       <ThumbsUp className="h-4 w-4 mr-2" />
                       {reply.likes} Suka
                     </Button>
-                    <Button variant="ghost" size="sm">
-                      <Flag className="h-4 w-4 mr-2" />
-                      Laporkan
-                    </Button>
                   </div>
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-xs text-muted-foreground">
                     {reply.createdAt}
                   </span>
                 </div>
