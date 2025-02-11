@@ -74,7 +74,7 @@ export default function ThreadReplies({ threadId }: ThreadRepliesProps) {
                       variant="ghost"
                       size="sm"
                       loading={loadingLike}
-                      onClick={() => handleLike}
+                      onClick={() => handleLike(reply.id)}
                     >
                       <ThumbsUp
                         className="h-4 w-4 mr-2 "
