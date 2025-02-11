@@ -73,6 +73,14 @@ export default function FeedbackForm() {
   // functions
   async function onSubmit(data: TFeedbackForm) {
     try {
+      if (!isOnline) {
+        toast({
+          title: "Mode Offline",
+          description: "Tidak dapat melakukan aksi dalam mode offline",
+          variant: "destructive",
+        });
+        return;
+      }
       setIsSubmitting(true);
 
       await addFeedback.mutateAsync({
