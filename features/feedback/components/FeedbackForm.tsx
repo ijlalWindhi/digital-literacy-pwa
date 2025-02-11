@@ -224,11 +224,9 @@ export default function FeedbackForm() {
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
+            <Button type="submit" className="w-full" loading={isSubmitting}>
               {isOnline
-                ? isSubmitting
-                  ? "Mengirim..."
-                  : "Kirim Feedback"
+                ? "Kirim Feedback"
                 : "Feedback tidak tersedia (Offline)"}
             </Button>
           </form>

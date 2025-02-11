@@ -177,12 +177,8 @@ export default function ContactForm() {
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isOnline
-                ? isSubmitting
-                  ? "Mengirim..."
-                  : "Kirim Pesan"
-                : "Pesan tidak tersedia (Offline)"}
+            <Button type="submit" className="w-full" loading={isSubmitting}>
+              {isOnline ? "Kirim Pesan" : "Pesan tidak tersedia (Offline)"}
             </Button>
           </form>
         </Form>
