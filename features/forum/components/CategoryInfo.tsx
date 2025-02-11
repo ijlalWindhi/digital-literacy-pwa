@@ -55,20 +55,27 @@ export default function CategoryInfo({ categoryId }: CategoryInfoProps) {
         )}
       </CardHeader>
       <CardContent>
-        <div className="flex items-center justify-between">
-          <Badge variant="secondary" className="text-xs md:text-sm">
-            {forums?.length ?? 0} diskusi
-          </Badge>
-          <span className="text-xs md:text-sm text-muted-foreground">
-            Terakhir diperbarui:{" "}
-            {forums?.[0]?.updated_at
-              ? formatDistanceToNow(new Date(forums[0].updated_at), {
-                  addSuffix: true,
-                  locale: id,
-                })
-              : "-"}
-          </span>
-        </div>
+        {isLoading ? (
+          <div className="flex justify-between">
+            <Skeleton className="h-6 w-1/4" />
+            <Skeleton className="h-6 w-1/4" />
+          </div>
+        ) : (
+          <div className="flex items-center justify-between">
+            <Badge variant="secondary" className="text-xs md:text-sm">
+              {forums?.length ?? 0} diskusi
+            </Badge>
+            <span className="text-xs md:text-sm text-muted-foreground">
+              Terakhir diperbarui:{" "}
+              {forums?.[0]?.updated_at
+                ? formatDistanceToNow(new Date(forums[0].updated_at), {
+                    addSuffix: true,
+                    locale: id,
+                  })
+                : "-"}
+            </span>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
