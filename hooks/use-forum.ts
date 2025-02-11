@@ -59,7 +59,7 @@ export function useForumStats() {
 export function useRecentDiscussions() {
   return useQuery({
     queryKey: ["recent-discussions"],
-    queryFn: () => getRecentDiscussions(5),
+    queryFn: () => getRecentDiscussions(3),
   });
 }
 

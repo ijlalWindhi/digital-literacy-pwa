@@ -152,7 +152,7 @@ export async function getForumStats() {
   return stats;
 }
 
-export async function getRecentDiscussions(limitCount = 5) {
+export async function getRecentDiscussions(limitCount = 3) {
   const q = query(
     forumCollection,
     orderBy("created_at", "desc"),
