@@ -14,70 +14,71 @@ export default function FeedbackForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Share Your Feedback</CardTitle>
+        <CardTitle>Bagikan Feedback Anda</CardTitle>
         <CardDescription>
-          Help us improve your learning experience
+          Bantu kami meningkatkan pengalaman belajar Anda
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form className="space-y-6">
           <div className="space-y-4">
-            <h3 className="font-medium">
-              How satisfied are you with the learning materials?
+            <h3 className="font-medium text-sm md:text-base">
+              Bagaimana kepuasan Anda terhadap materi belajar?
             </h3>
-            <RadioGroup defaultValue="satisfied" className="flex space-x-4">
+            <RadioGroup
+              defaultValue="satisfied"
+              className="flex flex-wrap sm:space-x-1 md:space-x-2 lg:space-x-4"
+            >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="very-satisfied" id="very-satisfied" />
-                <Label htmlFor="very-satisfied">Very Satisfied</Label>
+                <Label htmlFor="very-satisfied">Sangat Puas</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="satisfied" id="satisfied" />
-                <Label htmlFor="satisfied">Satisfied</Label>
+                <Label htmlFor="satisfied">Puas</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="neutral" id="neutral" />
-                <Label htmlFor="neutral">Neutral</Label>
+                <Label htmlFor="neutral">Netral</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="unsatisfied" id="unsatisfied" />
-                <Label htmlFor="unsatisfied">Unsatisfied</Label>
+                <Label htmlFor="unsatisfied">Tidak Puas</Label>
               </div>
             </RadioGroup>
           </div>
 
           <div className="space-y-2">
-            <label className="font-medium">
-              What aspects could be improved?
-            </label>
-            <div className="grid grid-cols-2 gap-4">
+            <Label>Apa aspek yang perlu ditingkatkan?</Label>
+            <div className="grid sm:grid-cols-2 gap-4">
               {[
-                "Content Quality",
-                "Navigation",
-                "Quizzes",
-                "Technical Issues",
-                "User Interface",
-                "Learning Experience",
+                "Kualitas Konten",
+                "Navigasi",
+                "Kuis",
+                "Masalah Teknis",
+                "Antarmuka Pengguna",
+                "Pengalaman Belajar",
               ].map((aspect) => (
-                <label key={aspect} className="flex items-center space-x-2">
+                <Label key={aspect} className="flex items-center space-x-2">
                   <input type="checkbox" className="form-checkbox" />
                   <span>{aspect}</span>
-                </label>
+                </Label>
               ))}
             </div>
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="feedback" className="font-medium">
-              Detailed Feedback
-            </label>
+            <Label htmlFor="feedback" className="font-medium">
+              Detail Feedback
+            </Label>
             <Textarea
               id="feedback"
-              placeholder="Share your thoughts, suggestions, or concerns..."
+              placeholder="Bagikan pendapat, saran, atau masalah Anda..."
               className="min-h-[150px]"
             />
           </div>
 
-          <Button className="w-full">Submit Feedback</Button>
+          <Button className="w-full">Kirim Feedback</Button>
         </form>
       </CardContent>
     </Card>
