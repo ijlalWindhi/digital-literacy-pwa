@@ -37,7 +37,9 @@ export default function Header() {
             className="object-cover w-full h-full rounded-full"
           />
           <AvatarFallback>
-            {me?.name?.charAt(0)?.toUpperCase() || "-"}
+            {me.name?.charAt(0)?.toUpperCase() ||
+              me.email?.charAt(0)?.toUpperCase() ||
+              "-"}
           </AvatarFallback>
         </Avatar>
         <div className="space-y-1 text-center sm:text-left">
