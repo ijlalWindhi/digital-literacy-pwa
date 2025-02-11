@@ -21,7 +21,7 @@ export function useRegister() {
           image: "",
           role: {
             id: 2,
-            nama: "user",
+            nama: "User",
           },
         });
       }
