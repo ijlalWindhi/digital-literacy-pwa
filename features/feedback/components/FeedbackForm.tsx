@@ -31,8 +31,9 @@ import useAuth from "@/stores/auth";
 import useTheme from "@/stores/theme";
 import { toast } from "@/hooks/use-toast";
 import useNetworkStatus from "@/hooks/use-network-status";
+import { feedbackSchema } from "@/utils/schema/feedback.schema";
 
-const aspectOptions = [
+export const aspectOptions = [
   "Kualitas Konten",
   "Navigasi",
   "Kuis",
@@ -40,18 +41,6 @@ const aspectOptions = [
   "Antarmuka Pengguna",
   "Pengalaman Belajar",
 ] as const;
-
-const formSchema = z.object({
-  satisfaction: z.enum(["Sangat Puas", "Puas", "Netral", "Tidak Puas"], {
-    required_error: "Silakan pilih tingkat kepuasan Anda",
-  }),
-  aspects: z.array(z.enum(aspectOptions)).min(1, {
-    message: "Pilih minimal satu aspek",
-  }),
-  feedback: z.string().min(10, {
-    message: "Feedback harus minimal 10 karakter",
-  }),
-});
 
 export default function FeedbackForm() {
   // variables
@@ -62,7 +51,7 @@ export default function FeedbackForm() {
   const { isOnline } = useNetworkStatus();
 
   const form = useForm<TFeedbackForm>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(feedbackSchema),
     defaultValues: {
       satisfaction: "Puas",
       aspects: [],

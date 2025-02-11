@@ -1,5 +1,18 @@
 import React from "react";
+import { Metadata } from "next";
 
-export default function Support() {
-  return <div>Support</div>;
+import Support from "@/features/support";
+
+import { METADATA } from "@/constants/metadata";
+
+export const metadata: Metadata = {
+  title: `Support ${METADATA.exTitle}`,
+  description: `Support center for help with your account`,
+  alternates: {
+    canonical: `${process.env.DOMAIN}/support`,
+  },
+};
+
+export default function SupportPage() {
+  return <Support />;
 }
