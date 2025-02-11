@@ -3,11 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 import { useFeedback } from "@/hooks/use-feedback";
-import useNetworkStatus from "@/hooks/use-network-status";
 
 export default function FeedbackList() {
   const { data: feedbacks, isLoading } = useFeedback();
-  const isOnline = useNetworkStatus();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -18,7 +16,7 @@ export default function FeedbackList() {
       <CardHeader>
         <CardTitle>Feedback Terbaru</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="max-h-[76vh] overflow-y-auto">
         <div className="space-y-4">
           {feedbacks?.length === 0 && (
             <div className="text-xs md:text-sm text-center text-gray-500">
