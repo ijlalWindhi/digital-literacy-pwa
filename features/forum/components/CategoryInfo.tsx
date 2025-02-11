@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { CategoryIcon } from "@/components/common/category-icon";
 
 import { FORUM_CATEGORIES } from "@/utils/forum-categories";
 import { useForums } from "@/hooks/use-forum";
@@ -29,8 +30,6 @@ export default function CategoryInfo({ categoryId }: CategoryInfoProps) {
     return <div>Kategori tidak ditemukan</div>;
   }
 
-  const CategoryIcon = category.icon;
-
   return (
     <Card>
       <CardHeader>
@@ -45,7 +44,10 @@ export default function CategoryInfo({ categoryId }: CategoryInfoProps) {
         ) : (
           <div className="flex items-center space-x-4">
             <div className={`p-2 rounded-lg ${category.color}`}>
-              <CategoryIcon className="h-6 w-6 text-white" />
+              <CategoryIcon
+                category={category.id}
+                className="h-6 w-6 text-white"
+              />
             </div>
             <div>
               <CardTitle>{category.title}</CardTitle>

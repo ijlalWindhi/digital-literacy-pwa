@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { CategoryIcon } from "@/components/common/category-icon";
 
 import { useForumStats } from "@/hooks/use-forum";
 import { FORUM_CATEGORIES } from "@/utils/forum-categories";
@@ -23,14 +24,16 @@ export default function ForumCategories() {
       </h2>
       <div className="grid gap-4 sm:grid-cols-2">
         {FORUM_CATEGORIES.map((category) => {
-          const Icon = category.icon;
           return (
             <Card key={category.id}>
               <Link href={`/forum/${category.id}`}>
                 <CardHeader>
                   <div className="flex items-center space-x-4">
                     <div className={`p-2 rounded-lg ${category.color}`}>
-                      <Icon className="h-5 w-5 text-white" />
+                      <CategoryIcon
+                        category={category.id}
+                        className="h-5 w-5 text-white"
+                      />
                     </div>
                     <div>
                       <CardTitle className="text-sm md:text-base">
