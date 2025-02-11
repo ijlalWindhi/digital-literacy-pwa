@@ -5,6 +5,7 @@ import {
   Home,
   Award,
   MessageSquare,
+  User,
   type LucideIcon,
 } from "lucide-react";
 
@@ -17,6 +18,7 @@ interface IMenuItem {
 interface IMenu {
   navSecondary: Array<IMenuItem>;
   menu: Array<IMenuItem>;
+  other: Array<IMenuItem>;
 }
 
 const MENU: IMenu = {
@@ -52,6 +54,13 @@ const MENU: IMenu = {
       name: "Forum Diskusi",
       url: "/forum",
       icon: MessageSquare,
+    },
+  ],
+  other: [
+    {
+      name: "Profil",
+      url: "/account",
+      icon: User,
     },
   ],
 };
