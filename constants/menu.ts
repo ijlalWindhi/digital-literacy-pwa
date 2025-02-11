@@ -62,6 +62,21 @@ const MENU: IMenu = {
       url: "/account",
       icon: User,
     },
+    {
+      name: "Tambah Forum Diskusi",
+      url: "/forum/new",
+      icon: MessageSquare,
+    },
+    {
+      name: "Thread Forum Diskusi",
+      url: "/forum/thread/{dynamic}",
+      icon: MessageSquare,
+    },
+    {
+      name: "Kategori Forum Diskusi",
+      url: "/forum/{dynamic}",
+      icon: MessageSquare,
+    },
   ],
 };
 
