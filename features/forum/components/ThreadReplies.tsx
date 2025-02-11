@@ -7,6 +7,7 @@ import { id } from "date-fns/locale";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import {
   useIncrementCommentLikeCount,
@@ -24,7 +25,7 @@ export default function ThreadReplies({ threadId }: ThreadRepliesProps) {
   const [loadingStates, setLoadingStates] = useState<{
     [key: string]: boolean;
   }>({});
-  const { data: replies } = useForumComments(threadId);
+  const { data: replies, isLoading } = useForumComments(threadId);
   const incrementCommentLikeCount = useIncrementCommentLikeCount();
   const { me } = useAuth();
 
@@ -56,6 +57,21 @@ export default function ThreadReplies({ threadId }: ThreadRepliesProps) {
       <h2 className="text-sm md:text-base font-bold">
         Balasan ({replies?.length ?? 0})
       </h2>
+      {isLoading && (
+        <div className="space-y-6 p-4 w-full border border-lg border-muted/50 rounded-lg">
+          {[...Array(5)].map((_, idx) => (
+            <div key={idx} className="flex items-start gap-4">
+              <Skeleton className="rounded-lg w-16 h-16" />
+              <div className="flex flex-col w-full gap-1">
+                <Skeleton className="h-4 w-1/2" />
+                <Skeleton className="h-3 w-1/4" />
+                <Skeleton className="h-3 w-1/3" />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {replies?.map((reply) => (
         <Card key={reply.id}>
           <CardContent className="pt-6">
