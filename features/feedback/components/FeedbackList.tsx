@@ -33,14 +33,14 @@ export default function FeedbackList() {
               <div className="flex items-center space-x-2 mb-2">
                 <Avatar className="h-6 w-6 md:h-8 md:w-8">
                   <AvatarFallback>
-                    {feedback.user?.name?.charAt(0) || "-"}
+                    {feedback.user?.email?.charAt(0) || "-"}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="font-medium text-sm md:text-base">
-                    {feedback.user?.name || "-"}
+                  <div className="font-medium text-xs md:text-sm">
+                    {feedback.user?.email || "-"}
                   </div>
-                  <div className="text-xs md:text-sm text-gray-500">
+                  <div className="text-xs text-gray-500">
                     {new Date(feedback.created_at).toLocaleDateString()}
                   </div>
                 </div>
