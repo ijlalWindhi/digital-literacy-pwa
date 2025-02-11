@@ -7,7 +7,7 @@ interface ThreadListProps {
   categoryId: string;
 }
 
-export function ThreadList({ categoryId }: ThreadListProps) {
+export default function ThreadList({ categoryId }: ThreadListProps) {
   // In a real app, fetch threads based on categoryId
   const threads = [
     {
@@ -59,21 +59,23 @@ export function ThreadList({ categoryId }: ThreadListProps) {
               className="block"
             >
               <div className="border rounded-lg p-4 hover:bg-muted/50 transition-colors">
-                <div className="flex items-start space-x-4">
-                  <Avatar>
-                    <AvatarImage src={thread.author.avatar} />
-                    <AvatarFallback>{thread.author.name[0]}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <h3 className="font-semibold">{thread.title}</h3>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <span className="text-sm text-muted-foreground">
-                        {thread.author.name}
-                      </span>
-                      <span className="text-sm text-muted-foreground">•</span>
-                      <span className="text-sm text-muted-foreground">
-                        {thread.timeAgo}
-                      </span>
+                <div className="flex flex-col md:flex-row items-start justify-between gap-2 md:gap-4">
+                  <div className="flex flex-col md:flex-row items-start gap-2 md:gap-4">
+                    <Avatar>
+                      <AvatarImage src={thread.author.avatar} />
+                      <AvatarFallback>{thread.author.name[0]}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h3 className="text-sm font-semibold">{thread.title}</h3>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <span className="text-xs text-muted-foreground">
+                          {thread.author.name}
+                        </span>
+                        <span className="text-xs text-muted-foreground">•</span>
+                        <span className="text-xs text-muted-foreground">
+                          {thread.timeAgo}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>

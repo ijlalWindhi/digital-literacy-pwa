@@ -68,8 +68,10 @@ export default function CategoryInfo({ categoryId }: CategoryInfoProps) {
       </CardHeader>
       <CardContent>
         <div className="flex items-center justify-between">
-          <Badge variant="secondary">{category.threads} diskusi</Badge>
-          <span className="text-sm text-muted-foreground">
+          <Badge variant="secondary" className="text-xs md:text-sm">
+            {category.threads} diskusi
+          </Badge>
+          <span className="text-xs md:text-sm text-muted-foreground">
             Terakhir diperbarui: 2 jam yang lalu
           </span>
         </div>
