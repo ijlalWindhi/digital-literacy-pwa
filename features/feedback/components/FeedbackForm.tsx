@@ -96,7 +96,7 @@ export default function FeedbackForm() {
       setModalSuccess({
         open: true,
         title: "Terima Kasih!",
-        message: "Feedback Anda telah kami terima.",
+        message: "Selamat🎉 Feedback Anda telah kami terima.",
         animation: "success",
       });
     } catch (error) {

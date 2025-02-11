@@ -52,7 +52,7 @@ export default function FormRegister() {
           open: true,
           title: "Pendaftaran Berhasil",
           message:
-            "Anda berhasil mendaftar akun. Silahkan login untuk melanjutkan.",
+            "Selamat🎉 Anda berhasil mendaftar akun. Silahkan login untuk melanjutkan.",
           actionVariant: "default",
           actionMessage: "Kembali ke halaman login",
           action: () => {

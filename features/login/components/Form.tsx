@@ -51,9 +51,9 @@ export default function FormLogin() {
         setModalSuccess({
           open: true,
           title: "Selamat Datang Kembali!",
-          message: "Anda berhasil login ke dalam aplikasi.",
+          message: "Selamat🎉 Anda berhasil login ke dalam aplikasi.",
           actionVariant: "default",
-          actionMessage: "Kembali ke Beranda",
+          actionMessage: "Menuju ke Beranda",
           action: () => {
             router.push("/");
           },
