@@ -13,10 +13,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function CategoryPage({
+export default async function CategoryPage({
   params,
 }: {
-  readonly params: { readonly categoryId: string };
+  params: Promise<{ categoryId: string }>;
 }) {
-  return <ForumCategory categoryId={params.categoryId} />;
+  const { categoryId } = await params;
+  return <ForumCategory categoryId={categoryId} />;
 }

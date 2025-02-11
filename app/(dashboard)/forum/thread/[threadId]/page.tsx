@@ -13,10 +13,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ThreadPage({
+export default async function ThreadPage({
   params,
 }: {
-  readonly params: { readonly threadId: string };
+  params: Promise<{ threadId: string }>;
 }) {
-  return <ForumThread threadId={params.threadId} />;
+  const { threadId } = await params;
+  return <ForumThread threadId={threadId} />;
 }
