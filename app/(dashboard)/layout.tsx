@@ -7,6 +7,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import ModalSuccess from "@/components/common/modal-success";
 
 import { useActiveTab } from "@/utils/active-tab";
 
@@ -17,6 +18,7 @@ export default function Page({
 }>) {
   return (
     <SidebarProvider>
+      <ModalSuccess />
       <AppSidebar />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2">
