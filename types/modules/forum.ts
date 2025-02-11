@@ -42,6 +42,7 @@ export type TForumComment = {
     image: string;
   };
   likes: number;
+  user_likes: string[];
   created_at: string;
   updated_at: string;
 };

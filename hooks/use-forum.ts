@@ -10,6 +10,7 @@ import {
   getPopularDiscussions,
   incrementViewCount,
   incrementLikeCount,
+  incrementCommentLikeCount,
 } from "@/app/actions/forum";
 import {
   TForumForm,
@@ -119,6 +120,37 @@ export function useIncrementLikeCount() {
             : [...userLikes, userId],
         };
       });
+    },
+  });
+}
+
+export function useIncrementCommentLikeCount() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      commentId,
+      userId,
+    }: {
+      commentId: string;
+      userId: string;
+    }) => incrementCommentLikeCount(commentId, userId),
+    onSuccess: (_, { commentId, userId }) => {
+      queryClient.setQueryData(
+        ["forum-comment", commentId],
+        (oldData: TForum) => {
+          if (!oldData) return oldData;
+          const userLikes = oldData.user_likes || [];
+          const hasLiked = userLikes.includes(userId);
+          return {
+            ...oldData,
+            likes: hasLiked ? oldData.likes - 1 : oldData.likes + 1,
+            user_likes: hasLiked
+              ? userLikes.filter((id) => id !== userId)
+              : [...userLikes, userId],
+          };
+        },
+      );
     },
   });
 }

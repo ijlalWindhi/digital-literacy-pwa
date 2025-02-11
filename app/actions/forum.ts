@@ -20,6 +20,7 @@ import {
   TUsers,
   TForumCategory,
   TForum,
+  TForumComment,
 } from "@/types";
 import { FORUM_CATEGORIES } from "@/utils/forum-categories";
 
@@ -181,6 +182,36 @@ export async function incrementLikeCount(forumId: string, userId: string) {
   }
 }
 
+export async function incrementCommentLikeCount(
+  commentId: string,
+  userId: string,
+) {
+  const commentRef = doc(db, "forum_comments", commentId);
+  const commentDoc = await getDoc(commentRef);
+
+  if (!commentDoc.exists()) {
+    throw new Error("Comment not found");
+  }
+
+  const commentData = commentDoc.data() as TForum;
+  const userLikes: string[] = commentData.user_likes || [];
+
+  if (userLikes.includes(userId)) {
+    const index = userLikes.indexOf(userId);
+    userLikes.splice(index, 1);
+    await updateDoc(commentRef, {
+      likes: increment(-1),
+      user_likes: userLikes,
+    });
+  } else {
+    userLikes.push(userId);
+    await updateDoc(commentRef, {
+      likes: increment(1),
+      user_likes: userLikes,
+    });
+  }
+}
+
 export async function getDetailForum(forumId: string) {
   const forumRef = doc(db, "forums", forumId);
   const forumDoc = await getDoc(forumRef);
@@ -206,5 +237,5 @@ export async function getForumComments(forumId: string) {
   return snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
-  }));
+  })) as TForumComment[];
 }
