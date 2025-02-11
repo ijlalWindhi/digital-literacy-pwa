@@ -76,6 +76,20 @@ export async function getForums(category?: TForumCategory) {
   }
 }
 
+export async function getDetailForum(forumId: string) {
+  const forumRef = doc(db, "forums", forumId);
+  const forumDoc = await getDoc(forumRef);
+
+  if (!forumDoc.exists()) {
+    throw new Error("Forum not found");
+  }
+
+  return {
+    id: forumDoc.id,
+    ...forumDoc.data(),
+  } as TForum;
+}
+
 export async function addComment(
   forumId: string,
   data: TForumCommentForm,
@@ -110,6 +124,20 @@ export async function addComment(
       error instanceof Error ? error.message : "An unknown error occurred",
     );
   }
+}
+
+export async function getForumComments(forumId: string) {
+  const q = query(
+    commentCollection,
+    where("forum_id", "==", forumId),
+    orderBy("created_at", "asc"),
+  );
+
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as TForumComment[];
 }
 
 export async function getForumStats() {
@@ -210,32 +238,4 @@ export async function incrementCommentLikeCount(
       user_likes: userLikes,
     });
   }
-}
-
-export async function getDetailForum(forumId: string) {
-  const forumRef = doc(db, "forums", forumId);
-  const forumDoc = await getDoc(forumRef);
-
-  if (!forumDoc.exists()) {
-    throw new Error("Forum not found");
-  }
-
-  return {
-    id: forumDoc.id,
-    ...forumDoc.data(),
-  } as TForum;
-}
-
-export async function getForumComments(forumId: string) {
-  const q = query(
-    commentCollection,
-    where("forum_id", "==", forumId),
-    orderBy("created_at", "asc"),
-  );
-
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as TForumComment[];
 }
