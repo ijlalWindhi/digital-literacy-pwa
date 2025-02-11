@@ -79,7 +79,7 @@ export async function updateUser(uid: string, data: Partial<TUsers>) {
   try {
     const userRef = doc(usersCollection, uid);
     await updateDoc(userRef, data);
-    return { success: true };
+    return { success: true, uid };
   } catch (error) {
     if (error instanceof Error) {
       toast({

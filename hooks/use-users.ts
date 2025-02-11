@@ -4,8 +4,10 @@ import {
   addUser,
   updateUser,
   deleteUser,
+  getUser,
 } from "@/app/actions/users";
 import { TUsers } from "@/types";
+import useAuth from "@/stores/auth";
 
 export function useUsers() {
   return useQuery({
@@ -35,8 +37,12 @@ export function useUpdateUser() {
       uid: string;
       data: Partial<{ name: string; email: string }>;
     }) => updateUser(uid, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
+    onSuccess: async (response) => {
+      if (response.success) {
+        await queryClient.invalidateQueries({ queryKey: ["users"] });
+        const user = await getUser(response.uid);
+        useAuth.getState().setMe(user);
+      }
     },
   });
 }

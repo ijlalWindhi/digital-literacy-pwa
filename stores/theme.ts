@@ -5,6 +5,7 @@ import { IThemeStore } from "@/types";
 const useTheme = create<IThemeStore>((set) => ({
   // state
   isLoading: false,
+  modalEditProfile: false,
   modalSuccess: {
     open: false,
     title: "",
@@ -17,6 +18,9 @@ const useTheme = create<IThemeStore>((set) => ({
   // actions
   setLoading: (loading) => {
     set({ isLoading: loading });
+  },
+  setModalEditProfile: (open) => {
+    set({ modalEditProfile: open });
   },
   setModalSuccess: (modal) => {
     set({ modalSuccess: modal });
