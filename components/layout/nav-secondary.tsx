@@ -9,27 +9,35 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useActiveTab } from "@/utils/active-tab";
 
 export function NavSecondary({
   items,
   ...props
 }: {
   items: {
-    title: string;
+    name: string;
     url: string;
     icon: LucideIcon;
   }[];
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+  // variables
+  const activeTab = useActiveTab();
+
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild size="sm">
+            <SidebarMenuItem key={item.name}>
+              <SidebarMenuButton
+                asChild
+                size="sm"
+                isActive={activeTab?.url === item.url}
+              >
                 <Link href={item.url}>
                   <item.icon />
-                  <span>{item.title}</span>
+                  <span>{item.name}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

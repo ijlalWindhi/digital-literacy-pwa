@@ -3,14 +3,6 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  BookOpen,
-  LifeBuoy,
-  Send,
-  Home,
-  Award,
-  MessageSquare,
-} from "lucide-react";
 
 import { NavMenu } from "@/components/layout/nav-menu";
 import { NavUser } from "@/components/layout/nav-user";
@@ -26,43 +18,7 @@ import {
 } from "@/components/ui/sidebar";
 
 import useAuth from "@/stores/auth";
-
-const data = {
-  navSecondary: [
-    {
-      title: "Support",
-      url: "/support",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "/feedback",
-      icon: Send,
-    },
-  ],
-  menu: [
-    {
-      name: "Halaman Utama",
-      url: "/",
-      icon: Home,
-    },
-    {
-      name: "Pembelajaran",
-      url: "/learn",
-      icon: BookOpen,
-    },
-    {
-      name: "Kuis & Latihan",
-      url: "/quiz",
-      icon: Award,
-    },
-    {
-      name: "Forum Diskusi",
-      url: "/forum",
-      icon: MessageSquare,
-    },
-  ],
-};
+import MENU from "@/constants/menu";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // variables
@@ -95,9 +51,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        {/* <NavMain items={data.navMain} /> */}
-        <NavMenu menu={data.menu} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMenu menu={MENU.menu} />
+        <NavSecondary items={MENU.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={me} />
