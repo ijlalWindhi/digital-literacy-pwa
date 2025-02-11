@@ -1,0 +1,38 @@
+export type TForumCategory =
+  | "konsep-dasar"
+  | "pengembangan-mobile"
+  | "pengembangan-web"
+  | "dev-sec";
+
+export type TForum = {
+  id: string;
+  title: string;
+  content: string;
+  category: TForumCategory;
+  author: {
+    uid: string;
+    name: string;
+  };
+  likes: number;
+  comments: number;
+  views: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type TForumComment = {
+  id: string;
+  forum_id: string;
+  content: string;
+  author: {
+    uid: string;
+    name: string;
+    image: string;
+  };
+  likes: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type TForumForm = Pick<TForum, "title" | "content" | "category">;
+export type TForumCommentForm = Pick<TForumComment, "content">;
