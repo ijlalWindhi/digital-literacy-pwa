@@ -68,7 +68,7 @@ export async function getForums(category?: TForumCategory) {
     return snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
-    }));
+    })) as TForum[];
   } catch (error) {
     throw new Error(
       error instanceof Error ? error.message : "An unknown error occurred",

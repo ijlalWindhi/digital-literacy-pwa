@@ -1,3 +1,7 @@
+"use client";
+import { formatDistanceToNow } from "date-fns";
+import { id } from "date-fns/locale";
+
 import {
   Card,
   CardContent,
@@ -6,46 +10,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Book, Code, Globe, Shield } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+
+import { FORUM_CATEGORIES } from "@/utils/forum-categories";
+import { useForums } from "@/hooks/use-forum";
+import { TForumCategory } from "@/types";
 
 interface CategoryInfoProps {
   readonly categoryId: string;
 }
 
 export default function CategoryInfo({ categoryId }: CategoryInfoProps) {
-  // In a real app, fetch category data based on categoryId
-  const categories = {
-    "basic-concepts": {
-      icon: Book,
-      title: "Konsep Dasar",
-      description: "Diskusi tentang konsep dasar literasi digital",
-      threads: 24,
-      color: "bg-blue-500",
-    },
-    "internet-safety": {
-      icon: Shield,
-      title: "Keamanan Internet",
-      description: "Tips dan diskusi tentang keamanan online",
-      threads: 18,
-      color: "bg-green-500",
-    },
-    "web-development": {
-      icon: Code,
-      title: "Pengembangan Web",
-      description: "Diskusi seputar pembuatan website",
-      threads: 32,
-      color: "bg-purple-500",
-    },
-    "digital-society": {
-      icon: Globe,
-      title: "Masyarakat Digital",
-      description: "Dampak teknologi pada masyarakat",
-      threads: 15,
-      color: "bg-orange-500",
-    },
-  };
-
-  const category = categories[categoryId as keyof typeof categories];
+  // variables
+  const category = FORUM_CATEGORIES.find((c) => c.id === categoryId);
+  const { data: forums, isLoading } = useForums(categoryId as TForumCategory);
 
   if (!category) {
     return <div>Kategori tidak ditemukan</div>;
@@ -56,23 +34,39 @@ export default function CategoryInfo({ categoryId }: CategoryInfoProps) {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center space-x-4">
-          <div className={`p-2 rounded-lg ${category.color}`}>
-            <CategoryIcon className="h-6 w-6 text-white" />
+        {isLoading ? (
+          <div className="flex">
+            <Skeleton className="h-14 w-14 rounded-lg" />
+            <div className="flex flex-col flex-1 ml-2">
+              <Skeleton className="h-6 w-1/4" />
+              <Skeleton className="h-6 w-1/2 mt-1" />
+            </div>
           </div>
-          <div>
-            <CardTitle>{category.title}</CardTitle>
-            <CardDescription>{category.description}</CardDescription>
+        ) : (
+          <div className="flex items-center space-x-4">
+            <div className={`p-2 rounded-lg ${category.color}`}>
+              <CategoryIcon className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <CardTitle>{category.title}</CardTitle>
+              <CardDescription>{category.description}</CardDescription>
+            </div>
           </div>
-        </div>
+        )}
       </CardHeader>
       <CardContent>
         <div className="flex items-center justify-between">
           <Badge variant="secondary" className="text-xs md:text-sm">
-            {category.threads} diskusi
+            {forums?.length ?? 0} diskusi
           </Badge>
           <span className="text-xs md:text-sm text-muted-foreground">
-            Terakhir diperbarui: 2 jam yang lalu
+            Terakhir diperbarui:{" "}
+            {forums?.[0]?.updated_at
+              ? formatDistanceToNow(new Date(forums[0].updated_at), {
+                  addSuffix: true,
+                  locale: id,
+                })
+              : "-"}
           </span>
         </div>
       </CardContent>
