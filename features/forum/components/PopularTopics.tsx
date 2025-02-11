@@ -31,7 +31,7 @@ const popularTopics = [
 
 export default function PopularTopics() {
   return (
-    <Card className="mt-9">
+    <Card className="lg:mt-9">
       <CardHeader>
         <div className="flex items-center space-x-2">
           <Flame className="h-5 w-5 text-orange-500" />
