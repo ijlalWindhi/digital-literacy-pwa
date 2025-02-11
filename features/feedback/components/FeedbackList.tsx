@@ -48,7 +48,7 @@ export default function FeedbackList() {
               <p className="text-xs md:text-sm text-gray-600">
                 {feedback.feedback}
               </p>
-              <div className="mt-2 text-xs md:text-sm text-gray-500">
+              <div className="mt-1 text-xs md:text-sm text-gray-500">
                 Penilaian: {feedback.satisfaction}
               </div>
             </div>
