@@ -103,7 +103,7 @@ export default function ThreadDetail({ threadId }: ThreadDetailProps) {
           </>
         ) : (
           <div className="flex flex-col md:flex-row gap-6">
-            <div className="flex md:flex-col items-center md:items-center md:w-32">
+            <div className="flex flex-col items-center md:items-center md:w-32">
               <Avatar className="h-10 w-10">
                 <AvatarFallback>
                   {thread?.author?.name[0] ?? "?"}

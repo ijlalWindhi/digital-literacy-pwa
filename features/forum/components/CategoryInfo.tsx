@@ -61,7 +61,7 @@ export default function CategoryInfo({ categoryId }: CategoryInfoProps) {
             <Skeleton className="h-6 w-1/4" />
           </div>
         ) : (
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap gap-2 items-center justify-between">
             <Badge variant="secondary" className="text-xs md:text-sm">
               {forums?.length ?? 0} diskusi
             </Badge>
