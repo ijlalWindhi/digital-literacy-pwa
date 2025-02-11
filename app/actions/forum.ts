@@ -8,6 +8,7 @@ import {
   where,
   orderBy,
   getDocs,
+  getDoc,
   doc,
   updateDoc,
   increment,
@@ -34,6 +35,7 @@ export async function addForum(data: TForumForm, user: TUsers) {
         name: user.name,
       },
       likes: 0,
+      user_likes: [],
       comments: 0,
       views: 0,
       created_at: new Date().toISOString(),
@@ -88,6 +90,7 @@ export async function addComment(
         image: user.image,
       },
       likes: 0,
+      user_likes: [],
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
@@ -149,4 +152,59 @@ export async function incrementViewCount(forumId: string) {
   await updateDoc(forumRef, {
     views: increment(1),
   });
+}
+
+export async function incrementLikeCount(forumId: string, userId: string) {
+  const forumRef = doc(db, "forums", forumId);
+  const forumDoc = await getDoc(forumRef);
+
+  if (!forumDoc.exists()) {
+    throw new Error("Forum not found");
+  }
+
+  const forumData = forumDoc.data() as TForum;
+  const userLikes: string[] = forumData.user_likes || [];
+
+  if (userLikes.includes(userId)) {
+    const index = userLikes.indexOf(userId);
+    userLikes.splice(index, 1);
+    await updateDoc(forumRef, {
+      likes: increment(-1),
+      user_likes: userLikes,
+    });
+  } else {
+    userLikes.push(userId);
+    await updateDoc(forumRef, {
+      likes: increment(1),
+      user_likes: userLikes,
+    });
+  }
+}
+
+export async function getDetailForum(forumId: string) {
+  const forumRef = doc(db, "forums", forumId);
+  const forumDoc = await getDoc(forumRef);
+
+  if (!forumDoc.exists()) {
+    throw new Error("Forum not found");
+  }
+
+  return {
+    id: forumDoc.id,
+    ...forumDoc.data(),
+  } as TForum;
+}
+
+export async function getForumComments(forumId: string) {
+  const q = query(
+    commentCollection,
+    where("forum_id", "==", forumId),
+    orderBy("created_at", "asc"),
+  );
+
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
 }

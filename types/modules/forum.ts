@@ -25,6 +25,7 @@ export type TForum = {
     name: string;
   };
   likes: number;
+  user_likes: string[];
   comments: number;
   views: number;
   created_at: string;
