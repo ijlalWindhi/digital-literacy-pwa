@@ -1,5 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { addForum, getForums, addComment } from "@/app/actions/forum";
+import {
+  addForum,
+  getForums,
+  addComment,
+  getForumStats,
+  getRecentDiscussions,
+  getPopularDiscussions,
+  incrementViewCount,
+} from "@/app/actions/forum";
 import { TForumForm, TForumCommentForm, TForumCategory, TUsers } from "@/types";
 
 export function useAddForum(user: TUsers) {
@@ -28,5 +36,32 @@ export function useAddComment(forumId: string, user: TUsers) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["forum-comments", forumId] });
     },
+  });
+}
+
+export function useForumStats() {
+  return useQuery({
+    queryKey: ["forum-stats"],
+    queryFn: getForumStats,
+  });
+}
+
+export function useRecentDiscussions() {
+  return useQuery({
+    queryKey: ["recent-discussions"],
+    queryFn: () => getRecentDiscussions(5),
+  });
+}
+
+export function usePopularDiscussions() {
+  return useQuery({
+    queryKey: ["popular-discussions"],
+    queryFn: () => getPopularDiscussions(4),
+  });
+}
+
+export function useIncrementViewCount(forumId: string) {
+  return useMutation({
+    mutationFn: () => incrementViewCount(forumId),
   });
 }

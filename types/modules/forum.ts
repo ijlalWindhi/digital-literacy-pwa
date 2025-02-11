@@ -1,8 +1,19 @@
+import type { LucideIcon } from "lucide-react";
+
 export type TForumCategory =
   | "konsep-dasar"
   | "pengembangan-mobile"
   | "pengembangan-web"
   | "dev-sec";
+
+export type TForumCategoryMetadata = {
+  id: TForumCategory;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  color: string;
+  threads: number;
+};
 
 export type TForum = {
   id: string;

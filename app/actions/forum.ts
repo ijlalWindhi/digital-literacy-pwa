@@ -11,8 +11,16 @@ import {
   doc,
   updateDoc,
   increment,
+  limit,
 } from "firebase/firestore";
-import { TForumForm, TForumCommentForm, TUsers, TForumCategory } from "@/types";
+import {
+  TForumForm,
+  TForumCommentForm,
+  TUsers,
+  TForumCategory,
+  TForum,
+} from "@/types";
+import { FORUM_CATEGORIES } from "@/utils/forum-categories";
 
 const forumCollection = collection(db, "forums");
 const commentCollection = collection(db, "forum_comments");
@@ -98,4 +106,47 @@ export async function addComment(
       error instanceof Error ? error.message : "An unknown error occurred",
     );
   }
+}
+
+export async function getForumStats() {
+  const stats: { [key: string]: number } = {};
+
+  for (const category of FORUM_CATEGORIES) {
+    const q = query(forumCollection, where("category", "==", category.id));
+    const snapshot = await getDocs(q);
+    stats[category.id] = snapshot.size;
+  }
+
+  return stats;
+}
+
+export async function getRecentDiscussions(limitCount = 5) {
+  const q = query(
+    forumCollection,
+    orderBy("created_at", "desc"),
+    limit(limitCount),
+  );
+
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as TForum[];
+}
+
+export async function getPopularDiscussions(limitCount = 4) {
+  const q = query(forumCollection, orderBy("views", "desc"), limit(limitCount));
+
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as TForum[];
+}
+
+export async function incrementViewCount(forumId: string) {
+  const forumRef = doc(db, "forums", forumId);
+  await updateDoc(forumRef, {
+    views: increment(1),
+  });
 }
