@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { MessageCircle, ThumbsUp } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { id } from "date-fns/locale";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -7,8 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { useRecentDiscussions } from "@/hooks/use-forum";
-import { formatDistanceToNow } from "date-fns";
-import { id } from "date-fns/locale";
 import { FORUM_CATEGORIES } from "@/utils/forum-categories";
 
 export default function RecentDiscussions() {

@@ -1,49 +1,23 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MessageCircle, ThumbsUp } from "lucide-react";
+"use client";
 import Link from "next/link";
+import { MessageCircle, ThumbsUp } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { id } from "date-fns/locale";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
+
+import { useForums } from "@/hooks/use-forum";
+import { TForumCategory } from "@/types";
 
 interface ThreadListProps {
-  categoryId: string;
+  readonly categoryId: string;
 }
 
 export default function ThreadList({ categoryId }: ThreadListProps) {
-  // In a real app, fetch threads based on categoryId
-  const threads = [
-    {
-      id: "1",
-      title: "Bagaimana cara mengamankan akun media sosial?",
-      author: {
-        name: "Ahmad S.",
-        avatar: "/placeholder.svg",
-      },
-      replies: 12,
-      likes: 24,
-      timeAgo: "2 jam yang lalu",
-    },
-    {
-      id: "2",
-      title: "Tips membuat password yang kuat",
-      author: {
-        name: "Budi R.",
-        avatar: "/placeholder.svg",
-      },
-      replies: 8,
-      likes: 15,
-      timeAgo: "5 jam yang lalu",
-    },
-    {
-      id: "3",
-      title: "Pengalaman menggunakan VPN",
-      author: {
-        name: "Citra D.",
-        avatar: "/placeholder.svg",
-      },
-      replies: 20,
-      likes: 32,
-      timeAgo: "1 hari yang lalu",
-    },
-  ];
+  // variables
+  const { data: threads, isLoading } = useForums(categoryId as TForumCategory);
 
   return (
     <Card>
@@ -52,7 +26,21 @@ export default function ThreadList({ categoryId }: ThreadListProps) {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {threads.map((thread) => (
+          {isLoading && (
+            <div className="animate-pulse space-y-4">
+              {[...Array(5)].map((_, idx) => (
+                <div key={idx} className="flex items-start gap-4">
+                  <Skeleton className="rounded-lg w-16 h-16" />
+                  <div className="flex flex-col w-full gap-1">
+                    <Skeleton className="h-4 w-1/2" />
+                    <Skeleton className="h-3 w-1/4" />
+                    <Skeleton className="h-3 w-1/3" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          {threads?.map((thread) => (
             <Link
               key={thread.id}
               href={`/forum/thread/${thread.id}`}
@@ -62,18 +50,24 @@ export default function ThreadList({ categoryId }: ThreadListProps) {
                 <div className="flex flex-col md:flex-row items-start justify-between gap-2 md:gap-4">
                   <div className="flex flex-col md:flex-row items-start gap-2 md:gap-4">
                     <Avatar>
-                      <AvatarImage src={thread.author.avatar} />
-                      <AvatarFallback>{thread.author.name[0]}</AvatarFallback>
+                      <AvatarFallback>
+                        {thread.author.name[0] ?? "?"}
+                      </AvatarFallback>
                     </Avatar>
                     <div>
-                      <h3 className="text-sm font-semibold">{thread.title}</h3>
+                      <h3 className="text-sm font-semibold">
+                        {thread.title || "-"}
+                      </h3>
                       <div className="flex items-center space-x-2 mt-1">
                         <span className="text-xs text-muted-foreground">
-                          {thread.author.name}
+                          {thread.author.name || "-"}
                         </span>
                         <span className="text-xs text-muted-foreground">•</span>
                         <span className="text-xs text-muted-foreground">
-                          {thread.timeAgo}
+                          {formatDistanceToNow(new Date(thread.created_at), {
+                            addSuffix: true,
+                            locale: id,
+                          })}
                         </span>
                       </div>
                     </div>
@@ -82,11 +76,11 @@ export default function ThreadList({ categoryId }: ThreadListProps) {
                 <div className="flex items-center space-x-4 mt-4">
                   <div className="flex items-center text-muted-foreground">
                     <MessageCircle className="h-4 w-4 mr-1" />
-                    <span className="text-sm">{thread.replies}</span>
+                    <span className="text-sm">{thread?.comments || 0}</span>
                   </div>
                   <div className="flex items-center text-muted-foreground">
                     <ThumbsUp className="h-4 w-4 mr-1" />
-                    <span className="text-sm">{thread.likes}</span>
+                    <span className="text-sm">{thread.likes || 0}</span>
                   </div>
                 </div>
               </div>
