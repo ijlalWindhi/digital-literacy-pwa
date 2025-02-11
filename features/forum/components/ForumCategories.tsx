@@ -27,7 +27,7 @@ export default function ForumCategories() {
           const Icon = category.icon;
           return (
             <Card key={category.id}>
-              <Link href={`/forum/category/${category.id}`}>
+              <Link href={`/forum/${category.id}`}>
                 <CardHeader>
                   <div className="flex items-center space-x-4">
                     <div className={`p-2 rounded-lg ${category.color}`}>
