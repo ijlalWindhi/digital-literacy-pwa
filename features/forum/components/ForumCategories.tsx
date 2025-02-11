@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Book, Code, Globe, Shield } from "lucide-react";
 
 import {
   Card,
@@ -48,7 +47,7 @@ export default function ForumCategories() {
                     <Badge className="text-xs" variant="secondary">
                       {isLoading
                         ? "..."
-                        : `${stats?.[category.id] || 0} diskusi`}
+                        : `${stats?.[category.id] ?? 0} diskusi`}
                     </Badge>
                     <span className="text-xs md:text-sm text-muted-foreground">
                       Lihat Diskusi →
