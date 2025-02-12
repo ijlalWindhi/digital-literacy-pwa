@@ -9,11 +9,11 @@ export const metadata: Metadata = {
   title: `Detail Quiz ${METADATA.exTitle}`,
   description: `Modul Detail Quiz merupakan tempat untuk melihat detail quiz yang telah dibuat`,
   alternates: {
-    canonical: `${process.env.DOMAIN}/quiz/thread/[quizId]`,
+    canonical: `${process.env.DOMAIN}/quiz/[quizId]`,
   },
 };
 
-export default async function ThreadPage({
+export default async function QuizDetailPage({
   params,
 }: {
   params: Promise<{ quizId: string }>;

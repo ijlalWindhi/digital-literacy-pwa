@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { Clock, HelpCircle, Trophy, AlertCircle } from "lucide-react";
+
 import {
   Card,
   CardContent,
@@ -7,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, HelpCircle, Trophy, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface QuizDetailProps {
@@ -91,7 +93,7 @@ export default function QuizDetailInformation({ quizId }: QuizDetailProps) {
         </Alert>
       </div>
 
-      <div className="space-y-6">
+      <div>
         <Card>
           <CardHeader>
             <CardTitle className="text-base md:text-lg">Persyaratan</CardTitle>
@@ -107,9 +109,11 @@ export default function QuizDetailInformation({ quizId }: QuizDetailProps) {
           </CardContent>
         </Card>
 
-        <Button className="w-full" size="lg">
-          Mulai Kuis
-        </Button>
+        <Link href={`/quiz/${quizId}/take`}>
+          <Button className="w-full mt-6" size="lg">
+            Mulai Kuis
+          </Button>
+        </Link>
       </div>
     </div>
   );
