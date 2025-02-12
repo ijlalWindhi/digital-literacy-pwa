@@ -68,6 +68,16 @@ const MENU: IMenu = {
       icon: Award,
     },
     {
+      name: "Pengerjaan Kuis",
+      url: "/quiz/{dynamic}/take",
+      icon: Award,
+    },
+    {
+      name: "Hasil Kuis",
+      url: "/quiz/{dynamic}/result",
+      icon: Award,
+    },
+    {
       name: "Tambah Forum Diskusi",
       url: "/forum/new",
       icon: MessageSquare,
