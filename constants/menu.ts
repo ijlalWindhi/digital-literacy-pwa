@@ -63,6 +63,11 @@ const MENU: IMenu = {
       icon: User,
     },
     {
+      name: "Detail Kuis",
+      url: "/quiz/{dynamic}",
+      icon: Award,
+    },
+    {
       name: "Tambah Forum Diskusi",
       url: "/forum/new",
       icon: MessageSquare,

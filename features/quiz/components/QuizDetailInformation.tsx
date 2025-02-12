@@ -38,7 +38,7 @@ export default function QuizDetailInformation({ quizId }: QuizDetailProps) {
 
   return (
     <div className="grid gap-6 md:grid-cols-3">
-      <div className="md:col-span-2 space-y-4 md:space-y-6">
+      <div className="md:col-span-2 space-y-6">
         <Card>
           <CardHeader>
             <div className="flex flex-wrap gap-2 mb-2">
@@ -60,7 +60,7 @@ export default function QuizDetailInformation({ quizId }: QuizDetailProps) {
             <CardDescription>{quiz.description}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4 md:space-y-6">
+            <div className="space-y-6">
               <div>
                 <h3 className="text-sm md:text-base font-semibold mb-2">
                   Topik yang Dibahas:
@@ -91,7 +91,7 @@ export default function QuizDetailInformation({ quizId }: QuizDetailProps) {
         </Alert>
       </div>
 
-      <div className="space-y-4 md:space-y-6">
+      <div className="space-y-6">
         <Card>
           <CardHeader>
             <CardTitle className="text-base md:text-lg">Persyaratan</CardTitle>
