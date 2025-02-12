@@ -40,6 +40,11 @@ export default function ThreadList({ categoryId }: ThreadListProps) {
               ))}
             </div>
           )}
+          {!threads && !isLoading && (
+            <div className="text-sm md:text-base text-center text-muted-foreground">
+              Belum ada diskusi
+            </div>
+          )}
           {threads?.map((thread) => (
             <Link
               key={thread.id}
