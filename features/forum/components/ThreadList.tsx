@@ -40,7 +40,7 @@ export default function ThreadList({ categoryId }: ThreadListProps) {
               ))}
             </div>
           )}
-          {!threads && !isLoading && (
+          {threads?.length === 0 && !isLoading && (
             <div className="text-sm md:text-base text-center text-muted-foreground">
               Belum ada diskusi
             </div>
