@@ -35,6 +35,11 @@ export default function PopularTopics() {
               ))}
             </div>
           )}
+          {topics?.length === 0 && !isLoading && (
+            <div className="text-sm md:text-base text-center text-muted-foreground">
+              Belum ada diskusi
+            </div>
+          )}
           {topics?.map((topic) => (
             <Link
               key={topic.id}

@@ -36,6 +36,11 @@ export default function RecentDiscussions() {
               ))}
             </div>
           )}
+          {discussions?.length === 0 && !isLoading && (
+            <div className="text-sm md:text-base text-center text-muted-foreground">
+              Belum ada diskusi
+            </div>
+          )}
           {discussions?.map((discussion) => (
             <Link
               key={discussion.id}
