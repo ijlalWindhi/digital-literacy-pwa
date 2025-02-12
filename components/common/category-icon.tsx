@@ -1,6 +1,15 @@
-import { Book, Smartphone, Code, Shield } from "lucide-react";
+"use client";
+import dynamic from "next/dynamic";
+import { LucideProps } from "lucide-react";
 
-interface CategoryIconProps {
+const Book = dynamic(() => import("lucide-react").then((mod) => mod.Book));
+const Smartphone = dynamic(() =>
+  import("lucide-react").then((mod) => mod.Smartphone),
+);
+const Code = dynamic(() => import("lucide-react").then((mod) => mod.Code));
+const Shield = dynamic(() => import("lucide-react").then((mod) => mod.Shield));
+
+interface CategoryIconProps extends LucideProps {
   category: string;
   className?: string;
 }
@@ -8,16 +17,22 @@ interface CategoryIconProps {
 export function CategoryIcon({
   category,
   className,
+  ...props
 }: Readonly<CategoryIconProps>) {
+  const iconProps = {
+    ...props,
+    className,
+  };
+
   switch (category) {
     case "konsep-dasar":
-      return <Book className={className} />;
+      return <Book {...iconProps} />;
     case "pengembangan-mobile":
-      return <Smartphone className={className} />;
+      return <Smartphone {...iconProps} />;
     case "pengembangan-web":
-      return <Code className={className} />;
+      return <Code {...iconProps} />;
     case "dev-sec":
-      return <Shield className={className} />;
+      return <Shield {...iconProps} />;
     default:
       return null;
   }
