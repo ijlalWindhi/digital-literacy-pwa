@@ -17,6 +17,10 @@ export default function Forum() {
           <PopularTopics />
         </div>
       </div>
+      <div className="bg-blue-500 hidden"></div>
+      <div className="bg-green-500 hidden"></div>
+      <div className="bg-purple-500 hidden"></div>
+      <div className="bg-orange-500 hidden"></div>
     </div>
   );
 }
