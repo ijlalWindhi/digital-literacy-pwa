@@ -4,7 +4,6 @@ import { Clock, Trophy } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 
 const recentQuizzes = [
   {
@@ -14,7 +13,7 @@ const recentQuizzes = [
     duration: "20 menit",
     questions: 15,
     points: 100,
-    progress: 0,
+    status: "completed",
   },
   {
     id: "2",
@@ -23,7 +22,7 @@ const recentQuizzes = [
     duration: "30 menit",
     questions: 20,
     points: 150,
-    progress: 60,
+    status: "not-started",
   },
   {
     id: "3",
@@ -32,7 +31,7 @@ const recentQuizzes = [
     duration: "25 menit",
     questions: 18,
     points: 120,
-    progress: 100,
+    status: "not-started",
   },
 ];
 
@@ -66,23 +65,12 @@ export default function RecentQuizzes() {
                 </div>
                 <Link href={`/quiz/${quiz.id}`}>
                   <Button className="text-xs md:text-sm">
-                    {quiz.progress === 0
+                    {quiz.status === "not-started"
                       ? "Mulai Kuis"
-                      : quiz.progress === 100
-                        ? "Lihat Hasil"
-                        : "Lanjutkan"}
+                      : "Lihat Hasil"}
                   </Button>
                 </Link>
               </div>
-              {quiz.progress > 0 && (
-                <div className="mt-4">
-                  <div className="flex justify-between text-xs md:text-sm mb-1">
-                    <span>Progress</span>
-                    <span>{quiz.progress}%</span>
-                  </div>
-                  <Progress value={quiz.progress} />
-                </div>
-              )}
             </div>
           ))}
         </div>
