@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export default function QuizDetail({ quizId }: Readonly<{ quizId: string }>) {
   return (
-    <div className="container mx-auto py-6 px-4">
+    <div className="container mx-auto pb-6 px-4">
       <div className="mb-2">
         <Link href="/quiz">
           <Button variant="ghost">
