@@ -16,7 +16,7 @@ export default function LearnModulChapterContent({
   const content = {
     video: {
       url: "https://example.com/video.mp4",
-      thumbnail: "/placeholder.svg",
+      thumbnail: "/images/unavailable-profile.png",
       duration: "10:00",
     },
     reading: {
@@ -69,7 +69,9 @@ export default function LearnModulChapterContent({
           <TabsContent value="video" className="space-y-4">
             <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
               <Image
-                src={content.video.thumbnail || "/placeholder.svg"}
+                src={
+                  content.video.thumbnail || "/images/unavailable-profile.png"
+                }
                 alt="Video thumbnail"
                 fill
                 className="object-cover"
