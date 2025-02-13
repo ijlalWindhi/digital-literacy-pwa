@@ -3,6 +3,7 @@ import { Target } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import Link from "next/link";
 
 const recentLearn = [
   {
@@ -50,7 +51,9 @@ export default function RecentLearn() {
                   {learn.category} • {learn.chapters} Bab • {learn.points} poin
                 </p>
               </div>
-              <Button>Lanjutkan</Button>
+              <Link href={`/learn/modul/${learn.id}`}>
+                <Button>Lanjutkan</Button>
+              </Link>
             </div>
             <Progress value={learn.progress} className="h-2" />
             <p className="mt-2 text-xs sm:text-sm text-gray-500">
