@@ -8,29 +8,19 @@ import {
   latestLearning,
 } from "@/constants/dashboard";
 
-import CardPattern from "@/components/common/card-pattern";
 import LeaderboardPodium from "./LeaderboardPodium";
 import PopularQuizzes from "./PopularQuizzes";
 import LatestLearning from "./LatestLearning";
 import ForumDiscussions from "./ForumDiscussions";
 import StatsCard from "./StatsCard";
 import AchievementCard from "./AchievementCard";
+import Header from "./Header";
 
 export default function Home() {
   return (
     <div className="container mx-auto space-y-8 pb-8">
-      <div className="relative rounded-xl border bg-card p-6 text-card-foreground">
-        <CardPattern className="absolute inset-0 opacity-5" />
-        <div className="relative space-y-2">
-          <h1 className="text-xl lg:text-2xl xl:text-3xl font-bold tracking-tight">
-            Selamat Pagi, <span className="text-primary">Sarah</span> 👋
-          </h1>
-          <p className="text-sm md:text-base text-muted-foreground">
-            Lanjutkan perjalanan belajar Anda. Anda telah menyelesaikan 60%
-            target minggu ini!
-          </p>
-        </div>
-      </div>
+      {/* Header */}
+      <Header />
 
       {/* Stats Grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
