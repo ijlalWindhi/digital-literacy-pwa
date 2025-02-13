@@ -16,14 +16,14 @@ export default function LearnCategorySidebar() {
             <div className="mx-auto mb-2 flex h-9 md:h-12 w-9 md:w-12 items-center justify-center rounded-full bg-yellow-100">
               <Star className="h-4 md:h-6 w-4 md:w-6 text-yellow-600" />
             </div>
-            <div className="text-xs md:text-sm font-medium">Pemula</div>
+            <div className="text-xs font-medium">Pemula</div>
             <div className="text-xs text-gray-600">Selesaikan 2 modul</div>
           </div>
           <div className="rounded-lg border p-4 text-center opacity-50">
             <div className="mx-auto mb-2 flex h-9 md:h-12 w-9 md:w-12 items-center justify-center rounded-full bg-gray-100">
               <Trophy className="h-4 md:h-6 w-4 md:w-6 text-gray-400" />
             </div>
-            <div className="text-xs md:text-sm font-medium">Expert</div>
+            <div className="text-xs font-medium">Expert</div>
             <div className="text-xs text-gray-600">Selesaikan semua modul</div>
           </div>
         </div>
@@ -43,9 +43,7 @@ export default function LearnCategorySidebar() {
           >
             <FileText className="h-5 w-5 text-indigo-600" />
             <div>
-              <div className="text-xs md:text-sm font-medium">
-                Panduan Belajar.pdf
-              </div>
+              <div className="text-xs font-medium">Panduan Belajar.pdf</div>
               <div className="text-xs text-gray-600">1.2 MB • PDF</div>
             </div>
           </Link>
