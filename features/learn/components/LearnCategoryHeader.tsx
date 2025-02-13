@@ -1,17 +1,28 @@
 import React from "react";
-import { Clock, FileText, Trophy } from "lucide-react";
+import { ArrowLeft, Clock, FileText, Trophy } from "lucide-react";
 
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CategoryIcon } from "@/components/common/category-icon";
 import { Badge } from "@/components/ui/badge";
 
 import { TLearnCategoryMetadata } from "@/types";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function LearnCategoryHeader({
   category,
 }: Readonly<{ category: TLearnCategoryMetadata }>) {
   return (
     <CardHeader>
+      <div className="mb-2">
+        <Link href="/learn">
+          <Button variant="ghost">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Kembali ke Daftar Pembelajaran
+          </Button>
+        </Link>
+      </div>
+
       <div className="flex items-center gap-3">
         <div className={`rounded-full p-3 ${category.color}`}>
           <CategoryIcon category={category.id} className="h-6 w-6 text-white" />
