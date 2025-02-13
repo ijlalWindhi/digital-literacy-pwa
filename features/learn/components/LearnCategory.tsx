@@ -1,13 +1,5 @@
 "use client";
-import {
-  CheckCircle,
-  Lock,
-  PlayCircle,
-  FileText,
-  Award,
-  Trophy,
-  Star,
-} from "lucide-react";
+import { CheckCircle, Lock, PlayCircle } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -96,10 +88,10 @@ export default function LearnCategory({
                       <PlayCircle className="h-6 w-6 text-indigo-500" />
                     )}
                     <div>
-                      <h3 className="text-sm md:text-base font-medium text-gray-900">
+                      <h3 className="text-sm font-medium text-gray-900">
                         {module.title}
                       </h3>
-                      <p className="text-xs md:text-sm text-gray-600">
+                      <p className="text-xs text-gray-600">
                         {module.duration} • {module.chapters} bab •{" "}
                         {module.points} poin
                       </p>
