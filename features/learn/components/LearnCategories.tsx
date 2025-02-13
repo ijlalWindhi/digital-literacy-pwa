@@ -13,7 +13,7 @@ export default function LearnCategories() {
       {LEARN_CATEGORIES.map((category) => (
         <Link
           key={category.id}
-          href={`/pembelajaran/${category.id}`}
+          href={`/learn/category/${category.id}`}
           className="group cursor-pointer rounded-2xl bg-white p-6 shadow-lg transition-all hover:shadow-xl"
         >
           <div className="mb-4 flex items-center justify-between">
