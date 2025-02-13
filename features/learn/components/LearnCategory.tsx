@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { CheckCircle, Lock, PlayCircle } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -98,12 +99,14 @@ export default function LearnCategory({
                     </div>
                   </div>
                   {!module.locked && (
-                    <Button
-                      variant={module.completed ? "outline" : "default"}
-                      className="w-full md:w-fit"
-                    >
-                      {module.completed ? "Ulangi" : "Mulai"}
-                    </Button>
+                    <Link href={`/learn/modul/${module.id}`}>
+                      <Button
+                        variant={module.completed ? "outline" : "default"}
+                        className="w-full md:w-fit"
+                      >
+                        {module.completed ? "Ulangi" : "Mulai"}
+                      </Button>
+                    </Link>
                   )}
                 </div>
                 {!module.locked && (
