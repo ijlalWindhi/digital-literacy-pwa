@@ -11,6 +11,8 @@ export const LEARN_CATEGORIES: TLearnCategoryMetadata[] = [
     color: "bg-blue-500",
     difficulty: "Pemula",
     total_points: 0,
+    total_duration: 0,
+    progress: 0,
   },
   {
     id: "pengembangan-web",
@@ -21,6 +23,8 @@ export const LEARN_CATEGORIES: TLearnCategoryMetadata[] = [
     color: "bg-purple-500",
     difficulty: "Lanjutan",
     total_points: 0,
+    total_duration: 0,
+    progress: 0,
   },
   {
     id: "pengembangan-mobile",
@@ -31,6 +35,8 @@ export const LEARN_CATEGORIES: TLearnCategoryMetadata[] = [
     color: "bg-green-500",
     difficulty: "Menengah",
     total_points: 0,
+    total_duration: 0,
+    progress: 0,
   },
   {
     id: "dev-sec",
@@ -41,5 +47,7 @@ export const LEARN_CATEGORIES: TLearnCategoryMetadata[] = [
     color: "bg-orange-500",
     difficulty: "Menengah",
     total_points: 0,
+    total_duration: 0,
+    progress: 0,
   },
 ];

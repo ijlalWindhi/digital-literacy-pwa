@@ -9,4 +9,6 @@ export type TLearnCategoryMetadata = {
   modulCount: number;
   difficulty: string;
   total_points: number;
+  total_duration: number;
+  progress: number;
 };
