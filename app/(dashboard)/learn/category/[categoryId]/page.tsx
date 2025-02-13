@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function LearnCategoryPage() {
-  return <LearnCategory />;
+export default async function LearnCategoryPage({
+  params,
+}: Readonly<{
+  params: Promise<{ categoryId: string }>;
+}>) {
+  const { categoryId } = await params;
+  return <LearnCategory categoryId={categoryId} />;
 }
