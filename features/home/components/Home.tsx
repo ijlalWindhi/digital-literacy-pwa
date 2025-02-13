@@ -18,7 +18,7 @@ import Header from "./Header";
 
 export default function Home() {
   return (
-    <div className="container mx-auto space-y-8 pb-8">
+    <div className="container mx-auto space-y-4 md:space-y-8">
       {/* Header */}
       <Header />
 
