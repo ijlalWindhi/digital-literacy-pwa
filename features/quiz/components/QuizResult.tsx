@@ -30,18 +30,19 @@ export default function QuizResult({ quizId }: { quizId: string }) {
             <div className="space-y-6">
               <div className="text-center">
                 <div className="text-5xl font-bold text-primary mb-2">
-                  {attempt?.score}%
+                  {isLoading ? "..." : (attempt?.score ?? 0)}%
                 </div>
                 <p className="text-xs md:text-sm lg:text-base text-muted-foreground">
-                  {attempt?.total_correct} dari {attempt?.total_questions}{" "}
-                  jawaban benar
+                  {isLoading ? "..." : (attempt?.total_correct ?? 0)} dari{" "}
+                  {isLoading ? "..." : (attempt?.total_questions ?? 0)} jawaban
+                  benar
                 </p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="bg-muted/50 p-4 rounded-lg text-center">
                   <div className="md:text-lg font-semibold">
-                    {attempt?.time_spend}
+                    {isLoading ? "..." : (attempt?.time_spend ?? 0)}
                   </div>
                   <div className="text-xs md:text-sm text-muted-foreground">
                     Waktu Pengerjaan
@@ -49,7 +50,7 @@ export default function QuizResult({ quizId }: { quizId: string }) {
                 </div>
                 <div className="bg-muted/50 p-4 rounded-lg text-center">
                   <div className="md:text-lg font-semibold">
-                    {attempt?.score}
+                    {isLoading ? "..." : (attempt?.score ?? 0)}
                   </div>
                   <div className="text-xs md:text-sm text-muted-foreground">
                     Poin Diperoleh
@@ -64,7 +65,7 @@ export default function QuizResult({ quizId }: { quizId: string }) {
                     Kembali ke Daftar Kuis
                   </Button>
                 </Link>
-                <Link href={`/quiz/1/take`}>
+                <Link href={`/quiz/${quizId}/take`}>
                   <Button className="flex-1 w-full">
                     <RotateCcw className="w-4 h-4 mr-2" />
                     Coba Lagi
