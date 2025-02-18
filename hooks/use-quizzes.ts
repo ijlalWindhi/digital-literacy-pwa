@@ -1,5 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { getQuizzes, getRecentQuizzes, getQuiz } from "@/app/actions/quiz";
+import {
+  getQuizzes,
+  getRecentQuizzes,
+  getQuiz,
+  getUserProgress,
+} from "@/app/actions/quiz";
 import { TQuizCategory } from "@/types";
 
 export function useQuizzes(category?: TQuizCategory) {
@@ -20,5 +25,12 @@ export function useQuiz(id: string) {
   return useQuery({
     queryKey: ["quiz", id],
     queryFn: () => getQuiz(id),
+  });
+}
+
+export function useUserProgress(userId: string) {
+  return useQuery({
+    queryKey: ["user-progress", userId],
+    queryFn: () => getUserProgress(userId),
   });
 }
