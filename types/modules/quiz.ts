@@ -58,7 +58,7 @@ export type TQuizAttempt = {
   quiz_id: string;
   start_time: string;
   end_time: string;
-  time_spend: number;
+  time_spend: string;
   status: "in_progress" | "completed" | "abandoned";
   score: number;
   total_correct: number;
