@@ -2,11 +2,13 @@
 
 import { db } from "@/utils/firebase";
 import {
+  doc,
   collection,
   query,
   where,
   orderBy,
   getDocs,
+  getDoc,
   limit,
 } from "firebase/firestore";
 import { TQuiz, TQuizCategory } from "@/types";
@@ -49,4 +51,15 @@ export async function getRecentQuizzes(limitCount = 3) {
     id: doc.id,
     ...doc.data(),
   })) as TQuiz[];
+}
+
+export async function getQuiz(quizId: string) {
+  try {
+    const docSnap = await getDoc(doc(db, "quizs", quizId));
+    return { id: docSnap.id, ...docSnap.data() } as TQuiz;
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "An unknown error occurred",
+    );
+  }
 }
