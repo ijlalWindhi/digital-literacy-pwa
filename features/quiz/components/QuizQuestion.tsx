@@ -2,12 +2,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 
+import { TQuestion } from "@/types";
+
 interface QuizQuestionProps {
-  question: {
-    id: number;
-    question: string;
-    options: string[];
-  };
+  question: TQuestion;
   selectedAnswer: number;
   onSelectAnswer: (index: number) => void;
 }
@@ -26,11 +24,11 @@ export default function QuizQuestion({
       </CardHeader>
       <CardContent>
         <RadioGroup
-          value={selectedAnswer.toString()}
+          value={selectedAnswer?.toString()}
           onValueChange={(value) => onSelectAnswer(Number.parseInt(value))}
         >
           <div className="space-y-3">
-            {question.options.map((option, index) => (
+            {question.options?.map((option, index) => (
               <div
                 key={index}
                 className={`flex items-center space-x-2 rounded-lg border p-2 md:p-4 cursor-pointer transition-colors
@@ -46,7 +44,7 @@ export default function QuizQuestion({
                   htmlFor={`option-${index}`}
                   className="flex-grow cursor-pointer text-xs md:text-sm"
                 >
-                  {option}
+                  {option?.text}
                 </Label>
               </div>
             ))}
