@@ -14,8 +14,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { CategoryIcon } from "@/components/common/category-icon";
 
 import { QUIZ_CATEGORIES } from "@/utils/quiz-categories";
-import { useForums } from "@/hooks/use-forum";
-import { TForumCategory } from "@/types";
+import { useQuizzes } from "@/hooks/use-quizzes";
+import { TQuizCategory } from "@/types";
 
 interface QuizCategoryInfoProps {
   readonly categoryId: string;
@@ -26,7 +26,7 @@ export default function QuizCategoryInfo({
 }: QuizCategoryInfoProps) {
   // variables
   const category = QUIZ_CATEGORIES.find((c) => c.id === categoryId);
-  const { data: forums, isLoading } = useForums(categoryId as TForumCategory);
+  const { data: quizzes, isLoading } = useQuizzes(categoryId as TQuizCategory);
 
   if (!category) {
     return <div>Kategori tidak ditemukan</div>;
@@ -67,12 +67,12 @@ export default function QuizCategoryInfo({
         ) : (
           <div className="flex flex-wrap gap-2 items-center justify-between">
             <Badge variant="secondary" className="text-xs md:text-sm">
-              {forums?.length ?? 0} kuis
+              {quizzes?.length ?? 0} kuis
             </Badge>
             <span className="text-xs md:text-sm text-muted-foreground">
               Terakhir diperbarui:{" "}
-              {forums?.[0]?.updated_at
-                ? formatDistanceToNow(new Date(forums[0].updated_at), {
+              {quizzes?.[0]?.updated_at
+                ? formatDistanceToNow(new Date(quizzes[0].updated_at), {
                     addSuffix: true,
                     locale: id,
                   })
