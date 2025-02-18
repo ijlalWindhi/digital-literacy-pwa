@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 import QuizQuestion from "./QuizQuestion";
 import QuizTimer from "./QuizTimer";
 import QuizProgressBar from "./QuizProgressBar";
 import QuizNavigation from "./QuizNavigation";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,61 +17,70 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
-// Sample quiz data - in a real app, this would come from an API
-const quizData = {
-  id: "1",
-  title: "Dasar-Dasar Keamanan Online",
-  duration: 1200, // 20 minutes in seconds
-  questions: [
-    {
-      id: 1,
-      question: "Apa yang dimaksud dengan Two-Factor Authentication (2FA)?",
-      options: [
-        "Menggunakan dua password yang berbeda",
-        "Proses verifikasi menggunakan dua langkah yang berbeda",
-        "Membuat backup password",
-        "Menggunakan dua email yang berbeda",
-      ],
-      correctAnswer: 1,
-    },
-    {
-      id: 2,
-      question:
-        "Manakah dari berikut yang merupakan praktik password yang aman?",
-      options: [
-        "Menggunakan tanggal lahir sebagai password",
-        "Menggunakan password yang sama untuk semua akun",
-        "Menggunakan kombinasi huruf, angka, dan simbol",
-        "Menyimpan password dalam file teks biasa",
-      ],
-      correctAnswer: 2,
-    },
-    {
-      id: 3,
-      question: "Apa yang harus dilakukan ketika menggunakan WiFi publik?",
-      options: [
-        "Mengabaikan pengaturan keamanan",
-        "Menggunakan VPN untuk enkripsi data",
-        "Membagikan informasi pribadi",
-        "Mengaktifkan file sharing",
-      ],
-      correctAnswer: 1,
-    },
-    // Add more questions as needed
-  ],
-};
+import { useQuiz, useQuizQuestions } from "@/hooks/use-quizzes";
+import { TQuestion } from "@/types";
 
 export default function QuizTake({ quizId }: Readonly<{ quizId: string }>) {
+  // variables
+  const { data: quizData, isLoading } = useQuiz(quizId);
+  const { data: questionsData, isLoading: questionsLoading } =
+    useQuizQuestions(quizId);
+  const questionsTotal = questionsData?.length ?? 0;
   const router = useRouter();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<number[]>(
-    new Array(quizData.questions.length).fill(-1),
+    new Array(questionsTotal).fill(-1),
   );
-  const [timeRemaining, setTimeRemaining] = useState(quizData.duration);
+  const [timeRemaining, setTimeRemaining] = useState(0);
   const [showTimeoutDialog, setShowTimeoutDialog] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isLastQuestion = currentQuestion === questionsTotal - 1;
+  const allQuestionsAnswered = answers.every((answer) => answer !== -1);
+  const answeredQuestions = answers.reduce((acc, answer, index) => {
+    if (answer !== -1) acc.push(index);
+    return acc;
+  }, [] as number[]);
 
+  // functions
+  const handleTimeUp = () => {
+    setShowTimeoutDialog(true);
+    setIsSubmitting(true);
+    handleSubmit();
+  };
+
+  const handleAnswerSelect = (questionIndex: number, answerIndex: number) => {
+    setAnswers((prev) => {
+      const newAnswers = [...prev];
+      newAnswers[questionIndex] = answerIndex;
+      return newAnswers;
+    });
+  };
+
+  const handleNavigate = (questionIndex: number) => {
+    setCurrentQuestion(questionIndex);
+  };
+
+  const handleNext = () => {
+    if (currentQuestion < (questionsTotal || 0) - 1) {
+      setCurrentQuestion((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion((prev) => prev - 1);
+    }
+  };
+
+  const handleSubmit = () => {
+    setIsSubmitting(true);
+    // In a real app, you would submit the answers here
+    router.push(`/quiz/${quizData?.id}/result`);
+  };
+
+  // lifecycle
   useEffect(() => {
     if (timeRemaining > 0 && !isSubmitting) {
       const timer = setInterval(() => {
@@ -88,75 +98,65 @@ export default function QuizTake({ quizId }: Readonly<{ quizId: string }>) {
     }
   }, [timeRemaining, isSubmitting]);
 
-  const handleTimeUp = () => {
-    setShowTimeoutDialog(true);
-    setIsSubmitting(true);
-    // In a real app, you would submit the answers here
-  };
-
-  const handleAnswerSelect = (questionIndex: number, answerIndex: number) => {
-    setAnswers((prev) => {
-      const newAnswers = [...prev];
-      newAnswers[questionIndex] = answerIndex;
-      return newAnswers;
-    });
-  };
-
-  const handleNavigate = (questionIndex: number) => {
-    setCurrentQuestion(questionIndex);
-  };
-
-  const handleNext = () => {
-    if (currentQuestion < quizData.questions.length - 1) {
-      setCurrentQuestion((prev) => prev + 1);
+  useEffect(() => {
+    if (quizData?.duration) {
+      setTimeRemaining(quizData.duration * 60);
     }
-  };
+  }, [quizData]);
 
-  const handlePrevious = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion((prev) => prev - 1);
-    }
-  };
+  if (isLoading || questionsLoading) {
+    return (
+      <div className="container mx-auto py-6 px-4">
+        <div className="max-w-3xl mx-auto space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between gap-4">
+            <Skeleton className="w-1/2 h-10" />
+            <Skeleton className="w-1/4 h-10" />
+          </div>
 
-  const handleSubmit = () => {
-    setIsSubmitting(true);
-    // In a real app, you would submit the answers here
-    router.push(`/quiz/${quizData.id}/result`);
-  };
+          <Skeleton className="h-4" />
+          <Skeleton className="h-4" />
+          <Skeleton className="h-10 w-1/2" />
 
-  const isLastQuestion = currentQuestion === quizData.questions.length - 1;
-  const hasAnsweredCurrent = answers[currentQuestion] !== -1;
-  const allQuestionsAnswered = answers.every((answer) => answer !== -1);
-  const answeredQuestions = answers.reduce((acc, answer, index) => {
-    if (answer !== -1) acc.push(index);
-    return acc;
-  }, [] as number[]);
+          <Skeleton className="h-56" />
+
+          <div className="flex justify-between items-center pt-4">
+            <Skeleton className="w-1/4 h-10" />
+            <Skeleton className="w-1/4 h-10" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-6 px-4">
       <div className="max-w-3xl mx-auto space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <h1 className="md:text-xl font-semibold leading-none tracking-tight">
-            {quizData.title}
+            {quizData?.title}
           </h1>
           <QuizTimer timeRemaining={timeRemaining} />
         </div>
 
         <QuizProgressBar
           currentQuestion={currentQuestion + 1}
-          totalQuestions={quizData.questions.length}
+          totalQuestions={questionsTotal}
           answeredQuestions={answeredQuestions.length}
         />
 
         <QuizNavigation
-          totalQuestions={quizData.questions.length}
+          totalQuestions={questionsTotal}
           answeredQuestions={answeredQuestions}
           currentQuestion={currentQuestion}
           onNavigate={handleNavigate}
         />
 
         <QuizQuestion
-          question={quizData.questions[currentQuestion]}
+          question={
+            questionsData
+              ? (questionsData[currentQuestion] as TQuestion)
+              : ({} as TQuestion)
+          }
           selectedAnswer={answers[currentQuestion]}
           onSelectAnswer={(answerIndex) =>
             handleAnswerSelect(currentQuestion, answerIndex)
@@ -198,7 +198,7 @@ export default function QuizTake({ quizId }: Readonly<{ quizId: string }>) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction
-              onClick={() => router.push(`/quiz/${quizData.id}/result`)}
+              onClick={() => router.push(`/quiz/${quizData?.id}/result`)}
             >
               Lihat Hasil
             </AlertDialogAction>
