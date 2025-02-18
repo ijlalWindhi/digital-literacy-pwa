@@ -11,9 +11,10 @@ import {
   getDoc,
   limit,
 } from "firebase/firestore";
-import { TQuiz, TQuizCategory, TUserProgress } from "@/types";
+import { TQuiz, TQuizCategory, TUserProgress, TQuestion } from "@/types";
 
 const quizzesCollection = collection(db, "quizs");
+const quizzesQuestionCollection = collection(db, "quizzes_question");
 const userProgressCollection = collection(db, "users_progress");
 
 export async function getQuizzes(category?: TQuizCategory) {
@@ -58,6 +59,24 @@ export async function getQuiz(quizId: string) {
   try {
     const docSnap = await getDoc(doc(db, "quizs", quizId));
     return { id: docSnap.id, ...docSnap.data() } as TQuiz;
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "An unknown error occurred",
+    );
+  }
+}
+
+export async function getQuizQuestions(quizId: string) {
+  try {
+    const quizQuestionQuery = query(
+      quizzesQuestionCollection,
+      where("quiz_id", "==", quizId),
+    );
+    const snapshot = await getDocs(quizQuestionQuery);
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as TQuestion[];
   } catch (error) {
     throw new Error(
       error instanceof Error ? error.message : "An unknown error occurred",

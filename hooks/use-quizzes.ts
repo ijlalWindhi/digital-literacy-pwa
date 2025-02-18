@@ -4,6 +4,7 @@ import {
   getRecentQuizzes,
   getQuiz,
   getUserProgress,
+  getQuizQuestions,
 } from "@/app/actions/quiz";
 import { TQuizCategory } from "@/types";
 
@@ -25,6 +26,13 @@ export function useQuiz(id: string) {
   return useQuery({
     queryKey: ["quiz", id],
     queryFn: () => getQuiz(id),
+  });
+}
+
+export function useQuizQuestions(quizId: string) {
+  return useQuery({
+    queryKey: ["quiz-questions", quizId],
+    queryFn: () => getQuizQuestions(quizId),
   });
 }
 
