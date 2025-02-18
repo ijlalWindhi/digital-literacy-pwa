@@ -5,3 +5,4 @@ export * from "./contact";
 export * from "./forum";
 export * from "./learn";
 export * from "./dashboard";
+export * from "./quiz";
