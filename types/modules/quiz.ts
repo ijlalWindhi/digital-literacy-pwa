@@ -72,7 +72,6 @@ export type TQuizAttempt = {
 // Struktur Collection untuk User Progress
 export type TUserProgress = {
   id: string;
-  user_id: string;
   total_points: number;
   current_level: string;
   completed_quizzes: {
