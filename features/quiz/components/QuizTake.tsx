@@ -19,7 +19,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { useQuiz, useQuizQuestions } from "@/hooks/use-quizzes";
+import { useQuiz, useQuizQuestions, useSubmitQuiz } from "@/hooks/use-quizzes";
+import useAuth from "@/stores/auth";
 import { TQuestion } from "@/types";
 
 export default function QuizTake({ quizId }: Readonly<{ quizId: string }>) {
@@ -27,6 +28,8 @@ export default function QuizTake({ quizId }: Readonly<{ quizId: string }>) {
   const { data: quizData, isLoading } = useQuiz(quizId);
   const { data: questionsData, isLoading: questionsLoading } =
     useQuizQuestions(quizId);
+  const submitQuizzes = useSubmitQuiz();
+  const { me } = useAuth();
   const questionsTotal = questionsData?.length ?? 0;
   const router = useRouter();
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -44,10 +47,31 @@ export default function QuizTake({ quizId }: Readonly<{ quizId: string }>) {
   }, [] as number[]);
 
   // functions
+  const submitQuiz = async () => {
+    if (!quizData || !questionsData) return;
+
+    try {
+      const result = await submitQuizzes.mutateAsync({
+        userId: me?.uid,
+        quizId: quizData.id,
+        answers,
+        questions: questionsData,
+        startTime: new Date(
+          Date.now() - (quizData.duration * 60 - timeRemaining) * 1000,
+        ).toISOString(),
+        quizData,
+      });
+
+      router.push(`/quiz/${quizData.id}/result?attempt=${result.attemptId}`);
+    } catch (error) {
+      console.error("Error submitting quiz:", error);
+    }
+  };
+
   const handleTimeUp = () => {
     setShowTimeoutDialog(true);
     setIsSubmitting(true);
-    handleSubmit();
+    submitQuiz();
   };
 
   const handleAnswerSelect = (questionIndex: number, answerIndex: number) => {
@@ -76,7 +100,7 @@ export default function QuizTake({ quizId }: Readonly<{ quizId: string }>) {
 
   const handleSubmit = () => {
     setIsSubmitting(true);
-    // In a real app, you would submit the answers here
+    submitQuiz();
     router.push(`/quiz/${quizData?.id}/result`);
   };
 
