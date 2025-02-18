@@ -11,73 +11,86 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
+
+import { useQuiz } from "@/hooks/use-quizzes";
 
 interface QuizDetailProps {
   quizId: string;
 }
 
-export default function QuizDetailInformation({ quizId }: QuizDetailProps) {
-  // In a real app, fetch quiz data based on quizId
-  const quiz = {
-    title: "Dasar-Dasar Keamanan Online",
-    description:
-      "Pelajari dan uji pengetahuan Anda tentang prinsip-prinsip dasar keamanan online",
-    category: "Keamanan Internet",
-    duration: "20 menit",
-    questions: 15,
-    points: 100,
-    requirements: [
-      "Telah menyelesaikan modul Pengenalan Keamanan Internet",
-      "Memahami konsep dasar penggunaan internet",
-    ],
-    topics: [
-      "Password dan Autentikasi",
-      "Ancaman Online",
-      "Praktik Keamanan Terbaik",
-      "Privasi Data",
-    ],
-  };
+export default function QuizDetailInformation({
+  quizId,
+}: Readonly<QuizDetailProps>) {
+  // variables
+  const { data: quiz, isLoading } = useQuiz(quizId);
 
   return (
     <div className="grid gap-6 md:grid-cols-3">
       <div className="md:col-span-2 space-y-6">
         <Card>
           <CardHeader>
-            <div className="flex flex-wrap gap-2 mb-2">
-              <Badge>{quiz.category}</Badge>
-              <Badge variant="outline">
-                <Clock className="h-4 w-4 mr-1" />
-                {quiz.duration}
-              </Badge>
-              <Badge variant="outline">
-                <HelpCircle className="h-4 w-4 mr-1" />
-                {quiz.questions} Pertanyaan
-              </Badge>
-              <Badge variant="outline">
-                <Trophy className="h-4 w-4 mr-1" />
-                {quiz.points} Poin
-              </Badge>
-            </div>
-            <CardTitle className="text-base md:text-lg">{quiz.title}</CardTitle>
-            <CardDescription>{quiz.description}</CardDescription>
+            {isLoading ? (
+              <>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  <Skeleton className="w-28 h-6 mb-2" />
+                  <Skeleton className="w-20 h-6 mb-2" />
+                  <Skeleton className="w-20 h-6 mb-2" />
+                  <Skeleton className="w-20 h-6 mb-2" />
+                </div>
+                <Skeleton className="w-1/2 h-6 mb-2" />
+                <Skeleton className="w-3/4 h-6 mb-2" />
+              </>
+            ) : (
+              <>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  <Badge>{quiz?.category.name}</Badge>
+                  <Badge variant="outline">
+                    <Clock className="h-4 w-4 mr-1" />
+                    {quiz?.duration}
+                  </Badge>
+                  <Badge variant="outline">
+                    <HelpCircle className="h-4 w-4 mr-1" />
+                    {quiz?.total_questions} Pertanyaan
+                  </Badge>
+                  <Badge variant="outline">
+                    <Trophy className="h-4 w-4 mr-1" />
+                    {quiz?.total_points} Poin
+                  </Badge>
+                </div>
+                <CardTitle className="text-base md:text-lg">
+                  {quiz?.title}
+                </CardTitle>
+                <CardDescription>{quiz?.description}</CardDescription>
+              </>
+            )}
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
-              <div>
-                <h3 className="text-sm md:text-base font-semibold mb-2">
-                  Topik yang Dibahas:
-                </h3>
-                <ul className="list-disc list-inside space-y-1">
-                  {quiz.topics.map((topic, index) => (
-                    <li
-                      key={index}
-                      className="text-xs md:text-sm text-muted-foreground"
-                    >
-                      {topic}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {isLoading ? (
+                <div className="space-y-2">
+                  <Skeleton className="w-1/2 h-6" />
+                  <Skeleton className="w-3/4 h-8" />
+                  <Skeleton className="w-3/4 h-8" />
+                </div>
+              ) : (
+                <div>
+                  <h3 className="text-sm md:text-base font-semibold mb-2">
+                    Topik yang Dibahas:
+                  </h3>
+                  <p></p>
+                  <ul className="list-disc list-inside space-y-1">
+                    {quiz?.topics.map((topic, index) => (
+                      <li
+                        key={index}
+                        className="text-xs md:text-sm text-muted-foreground"
+                      >
+                        {topic}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -100,7 +113,17 @@ export default function QuizDetailInformation({ quizId }: QuizDetailProps) {
           </CardHeader>
           <CardContent>
             <ul className="space-y-4">
-              {quiz.requirements.map((req, index) => (
+              {isLoading && (
+                <li>
+                  <Skeleton className="w-full h-6" />
+                </li>
+              )}
+              {quiz?.prerequisites?.length === 0 && !isLoading && (
+                <li className="text-xs md:text-sm text-muted-foreground">
+                  Tidak ada persyaratan untuk kuis ini.
+                </li>
+              )}
+              {quiz?.prerequisites?.map((req, index) => (
                 <li key={index} className="flex items-start gap-3">
                   • <span className="text-xs md:text-sm">{req}</span>
                 </li>
@@ -110,7 +133,7 @@ export default function QuizDetailInformation({ quizId }: QuizDetailProps) {
         </Card>
 
         <Link href={`/quiz/${quizId}/take`}>
-          <Button className="w-full mt-6" size="lg">
+          <Button className="w-full mt-6" size="lg" loading={isLoading}>
             Mulai Kuis
           </Button>
         </Link>
