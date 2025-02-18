@@ -28,6 +28,7 @@ export type TQuiz = {
   duration: number; // dalam menit
   total_points: number;
   total_questions: number;
+  topics: string[];
   level: "Pemula" | "Menengah" | "Lanjutan";
   prerequisites?: string[]; // ID quiz yang harus diselesaikan
   created_at: string;
