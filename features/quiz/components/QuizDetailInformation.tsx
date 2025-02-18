@@ -47,7 +47,7 @@ export default function QuizDetailInformation({
                   <Badge>{quiz?.category.name}</Badge>
                   <Badge variant="outline">
                     <Clock className="h-4 w-4 mr-1" />
-                    {quiz?.duration}
+                    {quiz?.duration} Menit
                   </Badge>
                   <Badge variant="outline">
                     <HelpCircle className="h-4 w-4 mr-1" />

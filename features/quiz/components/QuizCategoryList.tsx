@@ -56,7 +56,7 @@ export default function QuizCategoryList({
                   <div className="flex flex-wrap gap-2 items-center text-xs text-muted-foreground">
                     <div className="flex items-center">
                       <Clock className="h-4 w-4 mr-1" />
-                      {quiz.duration}
+                      {quiz.duration} menit
                     </div>
                     <div className="flex items-center">
                       <Trophy className="h-4 w-4 mr-1 text-yellow-500" />
