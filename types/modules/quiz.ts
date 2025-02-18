@@ -96,3 +96,25 @@ export type TCategory = {
   level: "Pemula" | "Menengah" | "Lanjutan";
   total_quizzes: number;
 };
+
+export interface IQuizResults {
+  totalScore: number;
+  totalCorrect: number;
+  detailedAnswers: TQuizAttempt["answers"];
+}
+
+export interface ISubmitQuizParams {
+  userId: string;
+  quizId: string;
+  answers: number[];
+  questions: TQuestion[];
+  startTime: string;
+  quizData: TQuiz;
+}
+
+export interface IUpdateUserProgressParams {
+  userId: string;
+  quizId: string;
+  score: number;
+  quizData: TQuiz;
+}

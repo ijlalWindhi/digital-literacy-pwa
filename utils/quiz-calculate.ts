@@ -32,7 +32,15 @@ export const calculateQuizResults = (
 };
 
 export const calculateLevel = (totalPoints: number): string => {
-  if (totalPoints >= 1000) return "Mahir";
-  if (totalPoints >= 500) return "Menengah";
-  return "Pemula";
+  if (totalPoints >= 2000) return "Garuda";
+  if (totalPoints >= 1000) return "Utama";
+  if (totalPoints >= 500) return "Madya";
+  return "Cikal";
+};
+
+export const levelMapping = {
+  Cikal: 0,
+  Madya: 500,
+  Utama: 1000,
+  Garuda: 2000,
 };

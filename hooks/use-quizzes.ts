@@ -1,12 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getQuizzes,
   getRecentQuizzes,
   getQuiz,
   getUserProgress,
   getQuizQuestions,
+  submitQuiz,
 } from "@/app/actions/quiz";
-import { TQuizCategory } from "@/types";
+import { ISubmitQuizParams, TQuizCategory } from "@/types";
 
 export function useQuizzes(category?: TQuizCategory) {
   return useQuery({
@@ -40,5 +41,16 @@ export function useUserProgress(userId: string) {
   return useQuery({
     queryKey: ["user-progress", userId],
     queryFn: () => getUserProgress(userId),
+  });
+}
+
+export function useSubmitQuiz() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: ISubmitQuizParams) => submitQuiz(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-progress"] });
+    },
   });
 }
