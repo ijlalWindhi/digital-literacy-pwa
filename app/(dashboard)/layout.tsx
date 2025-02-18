@@ -1,4 +1,5 @@
 "use client";
+import { Loader2 } from "lucide-react";
 
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { Separator } from "@/components/ui/separator";
@@ -10,14 +11,23 @@ import {
 import ModalSuccess from "@/components/common/modal-success";
 
 import { useActiveTab } from "@/utils/active-tab";
+import useTheme from "@/stores/theme";
 
 export default function Page({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // variables
+  const { isLoading } = useTheme();
+
   return (
     <SidebarProvider>
+      {isLoading && (
+        <div className="w-full h-full flex items-center justify-center bg-gray-500/60 z-50 absolute">
+          <Loader2 className="h-10 w-10 animate-spin text-primary" />
+        </div>
+      )}
       <ModalSuccess />
       <AppSidebar />
       <SidebarInset>
