@@ -15,16 +15,6 @@ export type TForumCategoryMetadata = {
   threads: number;
 };
 
-export type TQuizCategoryMetadata = {
-  id: string;
-  title: string;
-  description: string;
-  icon: LucideIcon;
-  color: string;
-  quizCount: number;
-  difficulty: string;
-};
-
 export type TForum = {
   id: string;
   title: string;
