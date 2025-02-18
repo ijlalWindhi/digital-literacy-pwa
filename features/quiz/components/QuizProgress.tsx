@@ -1,21 +1,18 @@
+import { useEffect } from "react";
 import { Trophy, Target, Award } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
+
+import { useUserProgress, useQuizzes } from "@/hooks/use-quizzes";
+import useAuth from "@/stores/auth";
 
 export default function QuizProgress() {
-  const progress = {
-    totalQuizzes: 45,
-    completedQuizzes: 12,
-    totalPoints: 1250,
-    level: 5,
-    nextLevelPoints: 1500,
-    achievements: [
-      "Pemula Bersemangat",
-      "Penjelajah Digital",
-      "Mahir Keamanan",
-    ],
-  };
+  // variables
+  const { me } = useAuth();
+  const { data: quizzes, isLoading: isLoadingQuiz } = useQuizzes();
+  const { data: progress, isLoading } = useUserProgress(me?.uid);
 
   return (
     <div className="space-y-6 lg:mt-9">
@@ -31,14 +28,23 @@ export default function QuizProgress() {
               <div className="flex justify-between text-xs md:text-sm mb-2">
                 <span>Kuis Diselesaikan</span>
                 <span>
-                  {progress.completedQuizzes}/{progress.totalQuizzes}
+                  {isLoading
+                    ? "..."
+                    : (progress?.completed_quizzes?.length ?? 0)}{" "}
+                  /{isLoadingQuiz ? "..." : (quizzes?.length ?? 0)}
                 </span>
               </div>
-              <Progress
-                value={
-                  (progress.completedQuizzes / progress.totalQuizzes) * 100
-                }
-              />
+              {isLoading ? (
+                <Skeleton className="h-2" />
+              ) : (
+                <Progress
+                  value={
+                    ((progress?.completed_quizzes?.length ?? 0) /
+                      (quizzes?.length ?? 0)) *
+                    100
+                  }
+                />
+              )}
             </div>
 
             <div className="space-y-2 text-xs md:text-sm">
@@ -47,7 +53,7 @@ export default function QuizProgress() {
                   <Trophy className="h-5 w-5 text-yellow-500 mr-2" />
                   <span>Total Poin</span>
                 </div>
-                <span className="font-semibold">{progress.totalPoints}</span>
+                <span className="font-semibold">{progress?.total_points}</span>
               </div>
 
               <div className="flex items-center justify-between">
@@ -55,19 +61,17 @@ export default function QuizProgress() {
                   <Target className="h-5 w-5 text-blue-500 mr-2" />
                   <span>Level</span>
                 </div>
-                <span className="font-semibold">{progress.level}</span>
+                <span className="font-semibold">{progress?.current_level}</span>
               </div>
             </div>
 
             <div>
               <div className="flex justify-between text-xs md:text-sm mb-2">
-                <span>Menuju Level {progress.level + 1}</span>
-                <span>
-                  {progress.totalPoints}/{progress.nextLevelPoints}
-                </span>
+                <span>Menuju Level {progress?.current_level ?? 0 + 1}</span>
+                <span>{progress?.total_points}/100</span>
               </div>
               <Progress
-                value={(progress.totalPoints / progress.nextLevelPoints) * 100}
+                value={((progress?.total_points ?? 0) / 100) * 100}
                 className="bg-blue-100"
               />
             </div>
@@ -81,13 +85,22 @@ export default function QuizProgress() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {progress.achievements.map((achievement, index) => (
+            {isLoading ? (
+              <Skeleton className="h-2" />
+            ) : (
+              progress?.achievements?.length === 0 && (
+                <div className="text-center text-xs md:text-sm">
+                  Belum ada pencapaian
+                </div>
+              )
+            )}
+            {progress?.achievements?.map((achievement, index) => (
               <div
                 key={index}
                 className="flex items-center text-xs md:text-sm space-x-3"
               >
                 <Award className="h-5 w-5 text-yellow-500" />
-                <span>{achievement}</span>
+                <span>{achievement?.name}</span>
               </div>
             ))}
           </div>
