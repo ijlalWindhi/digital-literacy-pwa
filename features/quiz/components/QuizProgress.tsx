@@ -31,7 +31,7 @@ export default function QuizProgress() {
                   {isLoading
                     ? "..."
                     : (progress?.completed_quizzes?.length ?? 0)}{" "}
-                  /{isLoadingQuiz ? "..." : (quizzes?.length ?? 0)}
+                  / {isLoadingQuiz ? "..." : (quizzes?.length ?? 0)}
                 </span>
               </div>
               {isLoading ? (
@@ -53,7 +53,9 @@ export default function QuizProgress() {
                   <Trophy className="h-5 w-5 text-yellow-500 mr-2" />
                   <span>Total Poin</span>
                 </div>
-                <span className="font-semibold">{progress?.total_points}</span>
+                <span className="font-semibold">
+                  {progress?.total_points ?? 0}
+                </span>
               </div>
 
               <div className="flex items-center justify-between">
@@ -61,14 +63,18 @@ export default function QuizProgress() {
                   <Target className="h-5 w-5 text-blue-500 mr-2" />
                   <span>Level</span>
                 </div>
-                <span className="font-semibold">{progress?.current_level}</span>
+                <span className="font-semibold">
+                  {progress?.current_level ?? 0}
+                </span>
               </div>
             </div>
 
             <div>
               <div className="flex justify-between text-xs md:text-sm mb-2">
-                <span>Menuju Level {progress?.current_level ?? 0 + 1}</span>
-                <span>{progress?.total_points}/100</span>
+                <span>
+                  Menuju Level {Number(progress?.current_level ?? 0) + 1}
+                </span>
+                <span>{progress?.total_points ?? 0} / 100</span>
               </div>
               <Progress
                 value={((progress?.total_points ?? 0) / 100) * 100}
