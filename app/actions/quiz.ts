@@ -26,6 +26,7 @@ import { calculateLevel, calculateQuizResults } from "@/utils/quiz-calculate";
 
 const quizzesCollection = collection(db, "quizs");
 const quizzesQuestionCollection = collection(db, "quizzes_question");
+const quizzesAttempts = collection(db, "quizzes_attempts");
 const userProgressCollection = collection(db, "users_progress");
 
 export async function getQuizzes(category?: TQuizCategory) {
@@ -101,6 +102,7 @@ export const submitQuiz = async ({
   answers,
   questions,
   startTime,
+  time_spend,
   quizData,
 }: ISubmitQuizParams) => {
   try {
@@ -110,9 +112,11 @@ export const submitQuiz = async ({
       quiz_id: quizId,
       start_time: startTime,
       end_time: new Date().toISOString(),
+      time_spend,
       status: "completed",
       score: results.totalScore,
       total_correct: results.totalCorrect,
+      total_questions: questions.length,
       answers: results.detailedAnswers,
     };
 
@@ -137,6 +141,17 @@ export const submitQuiz = async ({
     throw new Error("Failed to submit quiz");
   }
 };
+
+export async function getQuizAttempts(attemptId: string) {
+  try {
+    const docSnap = await getDoc(doc(quizzesAttempts, attemptId));
+    return { id: docSnap.id, ...docSnap.data() } as TQuizAttempt;
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "An unknown error occurred",
+    );
+  }
+}
 
 export async function getUserProgress(userId: string) {
   try {

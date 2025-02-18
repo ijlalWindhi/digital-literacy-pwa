@@ -21,6 +21,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { useQuiz, useQuizQuestions, useSubmitQuiz } from "@/hooks/use-quizzes";
 import useAuth from "@/stores/auth";
+import useTheme from "@/stores/theme";
 import { TQuestion } from "@/types";
 
 export default function QuizTake({ quizId }: Readonly<{ quizId: string }>) {
@@ -30,6 +31,7 @@ export default function QuizTake({ quizId }: Readonly<{ quizId: string }>) {
     useQuizQuestions(quizId);
   const submitQuizzes = useSubmitQuiz();
   const { me } = useAuth();
+  const { setLoading } = useTheme();
   const questionsTotal = questionsData?.length ?? 0;
   const router = useRouter();
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -48,23 +50,32 @@ export default function QuizTake({ quizId }: Readonly<{ quizId: string }>) {
 
   // functions
   const submitQuiz = async () => {
+    setLoading(true);
     if (!quizData || !questionsData) return;
 
     try {
+      const timeRemainingQuiz = quizData.duration * 60 - timeRemaining;
+      const minutes = Math.floor(timeRemainingQuiz / 60)
+        .toString()
+        .padStart(2, "0");
+      const seconds = (timeRemainingQuiz % 60).toString().padStart(2, "0");
       const result = await submitQuizzes.mutateAsync({
         userId: me?.uid,
         quizId: quizData.id,
         answers,
         questions: questionsData,
         startTime: new Date(
-          Date.now() - (quizData.duration * 60 - timeRemaining) * 1000,
+          Date.now() - timeRemainingQuiz * 1000,
         ).toISOString(),
+        time_spend: `${minutes}:${seconds}`,
         quizData,
       });
 
       router.push(`/quiz/${quizData.id}/result?attempt=${result.attemptId}`);
     } catch (error) {
       console.error("Error submitting quiz:", error);
+    } finally {
+      setLoading(false);
     }
   };
 

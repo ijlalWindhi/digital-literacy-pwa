@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Trophy, Target, Award } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,12 +6,50 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { useUserProgress, useQuizzes } from "@/hooks/use-quizzes";
 import useAuth from "@/stores/auth";
+import { levelMapping } from "@/utils/quiz-calculate";
 
 export default function QuizProgress() {
   // variables
   const { me } = useAuth();
   const { data: quizzes, isLoading: isLoadingQuiz } = useQuizzes();
   const { data: progress, isLoading } = useUserProgress(me?.uid);
+  const nextLevelInfo = getNextLevelProgress(progress?.total_points ?? 0);
+
+  // functions
+  function getNextLevelProgress(currentPoints: number) {
+    const levels = Object.entries(levelMapping);
+
+    // Find current level index
+    const currentLevelIndex = levels.findIndex(
+      ([_, threshold]) => currentPoints < threshold,
+    );
+
+    // If at max level
+    if (currentLevelIndex === -1) {
+      return {
+        nextLevel: levels[levels.length - 1][0],
+        nextThreshold: levels[levels.length - 1][1],
+        progress: 100,
+      };
+    }
+
+    // Get current and next level info
+    const prevThreshold =
+      currentLevelIndex > 0 ? levels[currentLevelIndex - 1][1] : 0;
+    const nextLevel = levels[currentLevelIndex][0];
+    const nextThreshold = levels[currentLevelIndex][1];
+
+    // Calculate progress percentage
+    const progressPoints = currentPoints - prevThreshold;
+    const totalNeeded = nextThreshold - prevThreshold;
+    const progress = (progressPoints / totalNeeded) * 100;
+
+    return {
+      nextLevel,
+      nextThreshold,
+      progress,
+    };
+  }
 
   return (
     <div className="space-y-6 lg:mt-9">
@@ -64,20 +101,25 @@ export default function QuizProgress() {
                   <span>Level</span>
                 </div>
                 <span className="font-semibold">
-                  {progress?.current_level ?? 0}
+                  {progress?.current_level ?? "-"}
                 </span>
               </div>
             </div>
 
             <div>
               <div className="flex justify-between text-xs md:text-sm mb-2">
+                <p>
+                  Menuju Level{" "}
+                  <span className="font-semibold text-primary">
+                    {nextLevelInfo.nextLevel}
+                  </span>
+                </p>
                 <span>
-                  Menuju Level {Number(progress?.current_level ?? 0) + 1}
+                  {progress?.total_points ?? 0} / {nextLevelInfo.nextThreshold}
                 </span>
-                <span>{progress?.total_points ?? 0} / 100</span>
               </div>
               <Progress
-                value={((progress?.total_points ?? 0) / 100) * 100}
+                value={nextLevelInfo.progress}
                 className="bg-blue-100"
               />
             </div>

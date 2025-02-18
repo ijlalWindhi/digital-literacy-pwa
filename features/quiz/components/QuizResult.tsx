@@ -1,18 +1,18 @@
+"use client";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Trophy, Home, RotateCcw } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+import { useQuizAttempts } from "@/hooks/use-quizzes";
+
 export default function QuizResult({ quizId }: { quizId: string }) {
-  // In a real app, fetch results from API or state management
-  const results = {
-    score: 80,
-    totalQuestions: 3,
-    correctAnswers: 2,
-    timeSpent: "15:30",
-    earnedPoints: 80,
-  };
+  // variables
+  const searchParams = useSearchParams();
+  const attemptId = searchParams.get("attempt");
+  const { data: attempt, isLoading } = useQuizAttempts(attemptId as string);
 
   return (
     <div className="container m-auto py-6 px-4">
@@ -30,18 +30,18 @@ export default function QuizResult({ quizId }: { quizId: string }) {
             <div className="space-y-6">
               <div className="text-center">
                 <div className="text-5xl font-bold text-primary mb-2">
-                  {results.score}%
+                  {attempt?.score}%
                 </div>
                 <p className="text-xs md:text-sm lg:text-base text-muted-foreground">
-                  {results.correctAnswers} dari {results.totalQuestions} jawaban
-                  benar
+                  {attempt?.total_correct} dari {attempt?.total_questions}{" "}
+                  jawaban benar
                 </p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="bg-muted/50 p-4 rounded-lg text-center">
                   <div className="md:text-lg font-semibold">
-                    {results.timeSpent}
+                    {attempt?.time_spend}
                   </div>
                   <div className="text-xs md:text-sm text-muted-foreground">
                     Waktu Pengerjaan
@@ -49,7 +49,7 @@ export default function QuizResult({ quizId }: { quizId: string }) {
                 </div>
                 <div className="bg-muted/50 p-4 rounded-lg text-center">
                   <div className="md:text-lg font-semibold">
-                    {results.earnedPoints}
+                    {attempt?.score}
                   </div>
                   <div className="text-xs md:text-sm text-muted-foreground">
                     Poin Diperoleh

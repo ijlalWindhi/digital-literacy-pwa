@@ -58,9 +58,11 @@ export type TQuizAttempt = {
   quiz_id: string;
   start_time: string;
   end_time: string;
+  time_spend: number;
   status: "in_progress" | "completed" | "abandoned";
   score: number;
   total_correct: number;
+  total_questions: number;
   answers: {
     question_id: string;
     selected_option_id: string;
@@ -109,6 +111,7 @@ export interface ISubmitQuizParams {
   answers: number[];
   questions: TQuestion[];
   startTime: string;
+  time_spend: string;
   quizData: TQuiz;
 }
 
