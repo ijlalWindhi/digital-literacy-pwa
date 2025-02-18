@@ -9,11 +9,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
-import { QUIZ_CATEGORIES } from "@/utils/quiz-categories";
 import { CategoryIcon } from "@/components/common/category-icon";
 
+import { useQuizzes } from "@/hooks/use-quizzes";
+import { QUIZ_CATEGORIES } from "@/utils/quiz-categories";
+
 export default function QuizCategories() {
+  // variables
+  const { data: quizzes, isLoading } = useQuizzes();
+
   return (
     <div className="space-y-2">
       <h2 className="text-base md:text-lg font-semibold leading-none tracking-tight">
@@ -48,7 +52,13 @@ export default function QuizCategories() {
                 <CardContent>
                   <div className="flex justify-between items-center">
                     <Badge className="text-xs" variant="secondary">
-                      {category.quizCount ?? 0} Kuis
+                      {isLoading
+                        ? "..."
+                        : `${
+                            quizzes?.filter(
+                              (quiz) => quiz.category.id === category.id,
+                            ).length ?? 0
+                          } Kuis`}
                     </Badge>
                     <div className="flex items-center space-x-2">
                       <Trophy className="h-4 w-4 text-yellow-500" />
