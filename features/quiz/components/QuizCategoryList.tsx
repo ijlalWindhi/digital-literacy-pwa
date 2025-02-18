@@ -6,48 +6,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 
-import { useForums } from "@/hooks/use-forum";
-import { TForumCategory } from "@/types";
+import { useQuizzes } from "@/hooks/use-quizzes";
+import { TQuizCategory } from "@/types";
 
 interface QuizCategoryListProps {
   readonly categoryId: string;
 }
 
-const recentQuizzes = [
-  {
-    id: "1",
-    title: "Dasar-Dasar Keamanan Online",
-    category: "Keamanan Internet",
-    duration: "20 menit",
-    questions: 15,
-    points: 100,
-    status: "completed",
-  },
-  {
-    id: "2",
-    title: "HTML & CSS Fundamental",
-    category: "Pengembangan Web",
-    duration: "30 menit",
-    questions: 20,
-    points: 150,
-    status: "not-started",
-  },
-  {
-    id: "3",
-    title: "Pengenalan Cloud Computing",
-    category: "Konsep Dasar",
-    duration: "25 menit",
-    questions: 18,
-    points: 120,
-    status: "not-started",
-  },
-];
-
 export default function QuizCategoryList({
   categoryId,
 }: QuizCategoryListProps) {
   // variables
-  const { data: threads, isLoading } = useForums(categoryId as TForumCategory);
+  const { data: quizzes, isLoading } = useQuizzes(categoryId as TQuizCategory);
 
   return (
     <Card>
@@ -70,12 +40,12 @@ export default function QuizCategoryList({
               ))}
             </div>
           )}
-          {threads?.length === 0 && !isLoading && (
+          {quizzes?.length === 0 && !isLoading && (
             <div className="text-sm md:text-base text-center text-muted-foreground">
               Belum ada kuis
             </div>
           )}
-          {recentQuizzes.map((quiz) => (
+          {quizzes?.map((quiz) => (
             <div
               key={quiz.id}
               className="border rounded-lg p-4 hover:bg-muted/50 transition-colors"
@@ -90,16 +60,12 @@ export default function QuizCategoryList({
                     </div>
                     <div className="flex items-center">
                       <Trophy className="h-4 w-4 mr-1 text-yellow-500" />
-                      {quiz.points} poin
+                      {quiz.total_points} poin
                     </div>
                   </div>
                 </div>
                 <Link href={`/quiz/${quiz.id}`}>
-                  <Button className="text-xs md:text-sm">
-                    {quiz.status === "not-started"
-                      ? "Mulai Kuis"
-                      : "Lihat Hasil"}
-                  </Button>
+                  <Button className="text-xs md:text-sm">Detail Kuis</Button>
                 </Link>
               </div>
             </div>

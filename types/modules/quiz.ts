@@ -10,6 +10,12 @@ export type TQuizCategoryMetadata = {
   difficulty: string;
 };
 
+export type TQuizCategory =
+  | "konsep-dasar"
+  | "pengembangan-mobile"
+  | "pengembangan-web"
+  | "dev-sec";
+
 // Struktur Collection untuk Quiz
 export type TQuiz = {
   id: string;
