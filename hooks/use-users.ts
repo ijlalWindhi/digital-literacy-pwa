@@ -5,6 +5,7 @@ import {
   updateUser,
   deleteUser,
   getUser,
+  getUserProgress,
 } from "@/app/actions/users";
 import { TUsers } from "@/types";
 import useAuth from "@/stores/auth";
@@ -54,5 +55,12 @@ export function useDeleteUser() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
+  });
+}
+
+export function useUserProgress(userId: string) {
+  return useQuery({
+    queryKey: ["user-progress", userId],
+    queryFn: () => getUserProgress(userId),
   });
 }

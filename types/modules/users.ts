@@ -1,3 +1,5 @@
+import { TQuiz } from "./quiz";
+
 export type TUsers = {
   uid: string;
   email: string;
@@ -45,3 +47,10 @@ export type TUserProgress = {
     earned_at: string;
   }[];
 };
+
+export interface IUpdateUserProgressParams {
+  userId: string;
+  quizId: string;
+  score: number;
+  quizData: TQuiz;
+}
