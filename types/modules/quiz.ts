@@ -71,34 +71,6 @@ export type TQuizAttempt = {
   }[];
 };
 
-// Struktur Collection untuk User Progress
-export type TUserProgress = {
-  id: string;
-  total_points: number;
-  current_level: string;
-  completed_quizzes: {
-    quiz_id: string;
-    highest_score: number;
-    attempts: number;
-    last_attempt_date: string;
-  }[];
-  achievements: {
-    id: string;
-    name: string;
-    earned_at: string;
-  }[];
-};
-
-// Struktur Collection untuk Categories
-export type TCategory = {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  level: "Pemula" | "Menengah" | "Lanjutan";
-  total_quizzes: number;
-};
-
 export interface IQuizResults {
   totalScore: number;
   totalCorrect: number;
