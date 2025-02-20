@@ -1,24 +1,29 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
+import { TModule } from "@/types";
 
 interface LearnModulChapterNavigationProps {
   modulId: string;
-  currentChapter: number;
-  totalChapters: number;
+  currentModule: TModule;
+  modules: TModule[];
   isComplete: boolean;
+  isUpdating: boolean;
   onMarkComplete: () => void;
   onNavigate: (direction: "prev" | "next") => void;
 }
 
 export default function LearnModulChapterNavigation({
   modulId,
-  currentChapter,
-  totalChapters,
+  currentModule,
+  modules,
   isComplete,
+  isUpdating,
   onMarkComplete,
   onNavigate,
 }: Readonly<LearnModulChapterNavigationProps>) {
+  const currentIndex = modules.findIndex((mod) => mod.id === currentModule?.id);
+
   return (
     <Card>
       <CardContent className="p-6">
@@ -27,7 +32,7 @@ export default function LearnModulChapterNavigation({
             variant="outline"
             className="flex-1"
             onClick={() => onNavigate("prev")}
-            disabled={currentChapter === 1}
+            disabled={currentIndex <= 0}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             <span>Sebelumnya</span>
@@ -36,9 +41,14 @@ export default function LearnModulChapterNavigation({
           <Button
             className="flex-1"
             onClick={onMarkComplete}
-            disabled={isComplete}
+            disabled={isComplete || isUpdating}
           >
-            {isComplete ? (
+            {isUpdating ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Memproses...
+              </>
+            ) : isComplete ? (
               <>
                 <CheckCircle className="h-4 w-4 mr-2" />
                 Selesai
@@ -52,7 +62,7 @@ export default function LearnModulChapterNavigation({
             variant="outline"
             className="flex-1"
             onClick={() => onNavigate("next")}
-            disabled={currentChapter === totalChapters}
+            disabled={currentIndex >= modules.length - 1}
           >
             <span>Selanjutnya</span>
             <ArrowRight className="h-4 w-4 ml-2" />

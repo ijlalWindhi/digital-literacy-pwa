@@ -11,9 +11,10 @@ import {
   useModuleByLearn,
   useModuleProgress,
   useModule,
+  useUpdateModuleProgress,
 } from "@/hooks/use-learn";
 import useAuth from "@/stores/auth";
-import { TModule } from "@/types";
+import { TModule, TModuleAttempt } from "@/types";
 
 export default function LearnModulChapter({
   modulId,
@@ -27,28 +28,39 @@ export default function LearnModulChapter({
   const { data: module, isLoading } = useModule(chapterId);
   const { data: moduleData } = useModuleByLearn(modulId);
   const { data: moduleProgress } = useModuleProgress(me?.uid, modulId);
+  const updateProgress = useUpdateModuleProgress();
   const router = useRouter();
   const [showNotes, setShowNotes] = useState(false);
-  const [chapterData, setChapterData] = useState<TModule[]>(moduleData || []);
-  const currentChapterId = Number.parseInt(chapterId);
 
-  useEffect(() => {
-    // In a real app, fetch chapter data here
-    // For now, we'll use the mock data
-  }, [chapterId]); // Removed unnecessary dependency: modulId
+  const currentProgress = moduleProgress?.find(
+    (attempt) => attempt.module_id === chapterId,
+  );
 
-  const handleMarkComplete = () => {
-    setChapterData((prev) => ({
-      ...prev,
-      [currentChapterId]: { ...prev[currentChapterId], isComplete: true },
-    }));
+  const handleMarkComplete = async () => {
+    if (!currentProgress || !me?.uid) return;
+
+    try {
+      await updateProgress.mutateAsync({
+        attemptId: currentProgress.id,
+        data: {
+          status: "completed",
+          completion_time: new Date().toISOString(),
+        } as Partial<TModuleAttempt>,
+      });
+    } catch (error) {
+      console.error("Failed to mark chapter as complete:", error);
+    }
   };
 
   const handleNavigation = (direction: "prev" | "next") => {
-    const newChapterId =
-      direction === "prev" ? currentChapterId - 1 : currentChapterId + 1;
-    if (newChapterId >= 1 && newChapterId <= Object.keys(chapterData).length) {
-      router.push(`/learn/modul/${modulId}/chapter/${newChapterId}`);
+    if (!moduleData) return;
+
+    const currentIndex = moduleData.findIndex((mod) => mod.id === chapterId);
+    if (currentIndex === -1) return;
+
+    const newIndex = direction === "prev" ? currentIndex - 1 : currentIndex + 1;
+    if (newIndex >= 0 && newIndex < moduleData.length) {
+      router.push(`/learn/modul/${modulId}/chapter/${moduleData[newIndex].id}`);
     }
   };
 
@@ -69,14 +81,12 @@ export default function LearnModulChapter({
           <ChapterContent module={module as TModule} isLoading={isLoading} />
           <ChapterNavigation
             modulId={modulId}
-            currentChapter={currentChapterId}
-            totalChapters={Object.keys(chapterData).length}
-            isComplete={
-              moduleProgress?.find((attempt) => attempt.id === chapterId)
-                ?.status === "completed"
-            }
+            currentModule={module as TModule}
+            modules={moduleData ?? []}
+            isComplete={currentProgress?.status === "completed"}
             onMarkComplete={handleMarkComplete}
             onNavigate={handleNavigation}
+            isUpdating={updateProgress.isPending}
           />
         </div>
         {showNotes && (
