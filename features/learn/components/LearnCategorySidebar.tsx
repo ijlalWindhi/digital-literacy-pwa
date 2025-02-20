@@ -37,14 +37,14 @@ export default function LearnCategorySidebar() {
         </div>
         <div className="space-y-3">
           <Link
-            href="#"
+            href="/pdf/Panduan Penggunaan Aplikasi.pdf"
             target="_blank"
             className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-gray-50"
           >
             <FileText className="h-5 w-5 text-indigo-600" />
             <div>
               <div className="text-xs font-medium">Panduan Belajar.pdf</div>
-              <div className="text-xs text-gray-600">1.2 MB • PDF</div>
+              <div className="text-xs text-gray-600">0.4 MB • PDF</div>
             </div>
           </Link>
         </div>
