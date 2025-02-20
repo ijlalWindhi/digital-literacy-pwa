@@ -16,6 +16,7 @@ import { useLearns } from "@/hooks/use-learn";
 import { useUserProgress } from "@/hooks/use-users";
 import useAuth from "@/stores/auth";
 import { TCourse, TUserProgress } from "@/types";
+import { formatMinutesToHoursAndMinutes } from "@/utils/format-time";
 
 const LearnCategory = ({
   categoryId,
@@ -108,8 +109,9 @@ const LearnCategory = ({
                           {course.title}
                         </h3>
                         <p className="text-xs text-gray-600">
-                          {course.duration} jam • {course.total_modules} bab •{" "}
-                          {course.total_points} poin
+                          {formatMinutesToHoursAndMinutes(course.duration)} •{" "}
+                          {course.total_modules} bab • {course.total_points}{" "}
+                          poin
                         </p>
                       </div>
                     </div>
