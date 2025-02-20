@@ -6,8 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { CategoryIcon } from "@/components/common/category-icon";
 
 import { LEARN_CATEGORIES } from "@/utils/learn-categories";
+import { useLearns } from "@/hooks/use-learn";
 
 export default function LearnCategories() {
+  // variables
+  const { data: learns, isLoading } = useLearns();
+
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       {LEARN_CATEGORIES.map((category) => (
@@ -38,9 +42,22 @@ export default function LearnCategories() {
           <div className="flex flex-wrap gap-2 items-center justify-between">
             <div className="flex items-center gap-2 text-xs md:text-sm text-gray-600">
               <Clock className="h-4 w-4" />
-              <span>{category.modulCount} Modul</span>
+              <span>
+                {isLoading
+                  ? "..."
+                  : (learns?.filter(
+                      (learn) => learn.category.id === category.id,
+                    ).length ?? 0)}{" "}
+                Modul
+              </span>
               <span className="text-gray-300">•</span>
-              <span>{category.total_points} Poin</span>
+              <span>
+                {learns
+                  ?.filter((learn) => learn.category.id === category.id)
+                  .reduce((acc, learn) => acc + learn.total_points, 0) ??
+                  0}{" "}
+                Poin
+              </span>
             </div>
             <Badge className="text-xs" variant="secondary">
               {category.difficulty}
