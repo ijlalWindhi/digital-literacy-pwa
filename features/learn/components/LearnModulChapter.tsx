@@ -7,17 +7,13 @@ import ChapterContent from "./LearnModulChapterContent";
 import ChapterNotes from "./LearnModulChapterNotes";
 import ChapterNavigation from "./LearnModulChapterNavigation";
 
-interface IChapterData {
-  [key: string]: { title: string; isComplete: boolean };
-}
-
-const mockChapterData: IChapterData = {
-  "1": { title: "Pengenalan Cloud Computing", isComplete: false },
-  "2": { title: "Jenis-jenis Layanan Cloud", isComplete: false },
-  "3": { title: "Manfaat Cloud Computing", isComplete: false },
-  "4": { title: "Implementasi Cloud", isComplete: false },
-  "5": { title: "Studi Kasus Cloud Computing", isComplete: false },
-};
+import {
+  useModuleByLearn,
+  useModuleProgress,
+  useModule,
+} from "@/hooks/use-learn";
+import useAuth from "@/stores/auth";
+import { TModule } from "@/types";
 
 export default function LearnModulChapter({
   modulId,
@@ -26,9 +22,14 @@ export default function LearnModulChapter({
   modulId: string;
   chapterId: string;
 }>) {
+  // variables
+  const { me } = useAuth();
+  const { data: module, isLoading } = useModule(chapterId);
+  const { data: moduleData } = useModuleByLearn(modulId);
+  const { data: moduleProgress } = useModuleProgress(me?.uid, modulId);
   const router = useRouter();
   const [showNotes, setShowNotes] = useState(false);
-  const [chapterData, setChapterData] = useState<IChapterData>(mockChapterData);
+  const [chapterData, setChapterData] = useState<TModule[]>(moduleData || []);
   const currentChapterId = Number.parseInt(chapterId);
 
   useEffect(() => {
@@ -58,18 +59,22 @@ export default function LearnModulChapter({
           className={`${showNotes ? "lg:col-span-2" : "lg:col-span-3"} space-y-6`}
         >
           <ChapterHeader
-            modulId={modulId}
-            chapterId={chapterId}
-            chapterTitle={chapterData[currentChapterId]?.title}
+            moduleId={modulId}
+            module={module as TModule}
+            moduleProgress={moduleProgress ?? []}
+            isLoading={isLoading}
             showNotes={showNotes}
             onToggleNotes={() => setShowNotes(!showNotes)}
           />
-          <ChapterContent modulId={modulId} chapterId={chapterId} />
+          <ChapterContent module={module as TModule} isLoading={isLoading} />
           <ChapterNavigation
             modulId={modulId}
             currentChapter={currentChapterId}
             totalChapters={Object.keys(chapterData).length}
-            isComplete={chapterData[currentChapterId]?.isComplete}
+            isComplete={
+              moduleProgress?.find((attempt) => attempt.id === chapterId)
+                ?.status === "completed"
+            }
             onMarkComplete={handleMarkComplete}
             onNavigate={handleNavigation}
           />

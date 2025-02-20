@@ -1,54 +1,22 @@
 import React from "react";
-import Image from "next/image";
+import Link from "next/link";
 import { PlayCircle, FileText, Download } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
+
+import { TModule } from "@/types";
+import { formatDurationVideo } from "@/utils/format-time";
 
 export default function LearnModulChapterContent({
-  modulId,
-  chapterId,
+  module,
+  isLoading,
 }: Readonly<{
-  modulId: string;
-  chapterId: string;
+  module: TModule;
+  isLoading: boolean;
 }>) {
-  const content = {
-    video: {
-      url: "https://example.com/video.mp4",
-      thumbnail: "/images/unavailable-profile.png",
-      duration: "10:00",
-    },
-    reading: {
-      sections: [
-        {
-          title: "Pengertian Cloud Computing",
-          content: `Cloud computing adalah model komputasi yang memungkinkan akses jaringan yang mudah dan on-demand ke kumpulan sumber daya komputasi yang dapat dikonfigurasi (misalnya, jaringan, server, penyimpanan, aplikasi, dan layanan) yang dapat dengan cepat disediakan dan dirilis dengan upaya manajemen atau interaksi penyedia layanan yang minimal. Teknologi ini telah mengubah cara organisasi dan individu menggunakan sumber daya komputasi, menyimpan data, dan menjalankan aplikasi.`,
-        },
-        {
-          title: "Karakteristik Utama",
-          content: `Beberapa karakteristik utama cloud computing meliputi:
-          
-          1. On-demand self-service
-          2. Broad network access
-          3. Resource pooling
-          4. Rapid elasticity
-          5. Measured service`,
-        },
-      ],
-      resources: [
-        {
-          name: "Panduan Cloud Computing.pdf",
-          size: "2.5 MB",
-        },
-        {
-          name: "Infografis Cloud Computing.png",
-          size: "1.2 MB",
-        },
-      ],
-    },
-  };
-
   return (
     <Card>
       <CardContent className="p-6">
@@ -66,27 +34,41 @@ export default function LearnModulChapterContent({
 
           <TabsContent value="video" className="space-y-4">
             <div className="relative aspect-video rounded-lg overflow-hidden bg-muted">
-              <Image
-                src={
-                  content.video.thumbnail || "/images/unavailable-profile.png"
-                }
-                alt="Video thumbnail"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Button size="lg" className="rounded-full w-16 h-16">
-                  <PlayCircle className="h-8 w-8" />
-                </Button>
-              </div>
+              {isLoading ? (
+                <Skeleton className="absolute inset-0" />
+              ) : (
+                <iframe
+                  src={module?.video?.url}
+                  title="Video"
+                  className="absolute inset-0 w-full h-full"
+                />
+              )}
             </div>
-            <p className="text-xs md:text-sm text-muted-foreground">
-              Durasi: {content.video.duration}
-            </p>
+            {isLoading ? (
+              <Skeleton className="h-6 w-1/4" />
+            ) : (
+              <p className="text-xs md:text-sm text-muted-foreground">
+                Durasi: {formatDurationVideo(module?.video?.duration ?? 0)}
+              </p>
+            )}
           </TabsContent>
 
           <TabsContent value="reading" className="space-y-8">
-            {content.reading.sections.map((section, index) => (
+            {isLoading && (
+              <div className="animate-pulse space-y-4">
+                {[...Array(3)].map((_, idx) => (
+                  <Skeleton key={idx} className="rounded-lg h-24" />
+                ))}
+              </div>
+            )}
+
+            {!isLoading && module?.reading.sections.length === 0 && (
+              <div className="text-xs md:text-sm text-muted-foreground">
+                Belum ada materi yang tersedia
+              </div>
+            )}
+
+            {module?.reading.sections.map((section, index) => (
               <div key={index} className="space-y-4">
                 <h3 className="text-base md:text-lg font-semibold">
                   {section.title}
@@ -109,18 +91,20 @@ export default function LearnModulChapterContent({
                 Materi Pendukung
               </h4>
               <div className="space-y-2">
-                {content.reading.resources.map((resource, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    className="w-full justify-start"
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    <span className="flex-1 text-left">{resource.name}</span>
-                    <span className="text-xs md:text-sm text-muted-foreground">
-                      {resource.size}
-                    </span>
-                  </Button>
+                {module?.reading.resources.map((resource, index) => (
+                  <Link key={index} href={resource.link} target="_blank">
+                    <Button
+                      key={index}
+                      variant="outline"
+                      className="w-full justify-start"
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      <span className="flex-1 text-left">{resource.name}</span>
+                      <span className="text-xs md:text-sm text-muted-foreground">
+                        {resource.size}
+                      </span>
+                    </Button>
+                  </Link>
                 ))}
               </div>
             </div>
