@@ -49,7 +49,7 @@ export type TModule = {
   video: {
     url: string;
     thumbnail: string;
-    duration: string;
+    duration: number;
   };
   reading: {
     sections: {
@@ -65,6 +65,7 @@ export type TModule = {
   created_at: string;
   updated_at: string;
   is_active: boolean;
+  order: number;
 };
 
 export type TModuleAttempt = {

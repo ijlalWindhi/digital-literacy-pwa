@@ -103,12 +103,24 @@ export async function getModuleByLearn(learnId: string) {
     const moduleQuery = query(
       modulesCollection,
       where("course_id", "==", learnId),
+      orderBy("order", "asc"),
     );
     const snapshot = await getDocs(moduleQuery);
     return snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     })) as TModule[];
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "An unknown error occurred",
+    );
+  }
+}
+
+export async function getModule(moduleId: string) {
+  try {
+    const docSnap = await getDoc(doc(modulesCollection, moduleId));
+    return { id: docSnap.id, ...docSnap.data() } as TModule;
   } catch (error) {
     throw new Error(
       error instanceof Error ? error.message : "An unknown error occurred",

@@ -4,6 +4,7 @@ import {
   getRecentLearns,
   getLearn,
   getModuleByLearn,
+  getModule,
   getModuleProgress,
   updateModuleProgress,
 } from "@/app/actions/learn";
@@ -40,6 +41,13 @@ export function useModuleByLearn(learnId: string) {
   return useQuery({
     queryKey: ["module-by-learn", learnId],
     queryFn: () => getModuleByLearn(learnId),
+  });
+}
+
+export function useModule(moduleId: string) {
+  return useQuery({
+    queryKey: ["module", moduleId],
+    queryFn: () => getModule(moduleId),
   });
 }
 
