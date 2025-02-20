@@ -1,17 +1,22 @@
 import React from "react";
+import Link from "next/link";
 import { ArrowLeft, Clock, FileText, Trophy } from "lucide-react";
 
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CategoryIcon } from "@/components/common/category-icon";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { TLearnCategoryMetadata } from "@/types";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { useLearns } from "@/hooks/use-learn";
 
 export default function LearnCategoryHeader({
   category,
 }: Readonly<{ category: TLearnCategoryMetadata }>) {
+  // variables
+  const { data: learns, isLoading } = useLearns(category?.id);
+
   return (
     <CardHeader>
       <div className="mb-2">
@@ -40,15 +45,36 @@ export default function LearnCategoryHeader({
       <div className="flex flex-wrap items-center gap-4 text-xs md:text-sm text-gray-600">
         <div className="flex items-center gap-1">
           <Clock className="h-4 w-4" />
-          <span>{category.total_duration}</span>
+          {isLoading ? (
+            <Skeleton className="h-5 w-20" />
+          ) : (
+            <span>
+              {learns?.reduce((total, learn) => total + learn.duration, 0) ?? 0}{" "}
+              Menit
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-1">
           <FileText className="h-4 w-4" />
-          <span>{category.modulCount} Modul</span>
+          {isLoading ? (
+            <Skeleton className="h-5 w-20" />
+          ) : (
+            <span>{learns?.length ?? 0} Modul</span>
+          )}
         </div>
         <div className="flex items-center gap-1">
           <Trophy className="h-4 w-4" />
-          <span>{category.total_points} Poin</span>
+          {isLoading ? (
+            <Skeleton className="h-5 w-20" />
+          ) : (
+            <span>
+              {learns?.reduce(
+                (total, learn) => total + learn.total_points,
+                0,
+              ) ?? 0}{" "}
+              Poin
+            </span>
+          )}
         </div>
       </div>
     </CardHeader>
