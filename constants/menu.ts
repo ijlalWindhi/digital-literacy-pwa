@@ -63,6 +63,21 @@ const MENU: IMenu = {
       icon: User,
     },
     {
+      name: "Kategori Pembelajaran",
+      url: "/learn/category/{dynamic}",
+      icon: BookOpen,
+    },
+    {
+      name: "Informasi Pembelajaran",
+      url: "/learn/modul/{dynamic}",
+      icon: BookOpen,
+    },
+    {
+      name: "Detail Pembelajaran",
+      url: "/learn/modul/{dynamic}/chapter/{dynamic}",
+      icon: BookOpen,
+    },
+    {
       name: "Detail Kuis",
       url: "/quiz/{dynamic}",
       icon: Award,
