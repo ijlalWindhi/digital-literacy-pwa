@@ -23,9 +23,7 @@ export default function LearnModulChapterContent({
       sections: [
         {
           title: "Pengertian Cloud Computing",
-          content: `Cloud computing adalah model komputasi yang memungkinkan akses jaringan yang mudah dan on-demand ke kumpulan sumber daya komputasi yang dapat dikonfigurasi (misalnya, jaringan, server, penyimpanan, aplikasi, dan layanan) yang dapat dengan cepat disediakan dan dirilis dengan upaya manajemen atau interaksi penyedia layanan yang minimal.
-
-          Teknologi ini telah mengubah cara organisasi dan individu menggunakan sumber daya komputasi, menyimpan data, dan menjalankan aplikasi.`,
+          content: `Cloud computing adalah model komputasi yang memungkinkan akses jaringan yang mudah dan on-demand ke kumpulan sumber daya komputasi yang dapat dikonfigurasi (misalnya, jaringan, server, penyimpanan, aplikasi, dan layanan) yang dapat dengan cepat disediakan dan dirilis dengan upaya manajemen atau interaksi penyedia layanan yang minimal. Teknologi ini telah mengubah cara organisasi dan individu menggunakan sumber daya komputasi, menyimpan data, dan menjalankan aplikasi.`,
         },
         {
           title: "Karakteristik Utama",
