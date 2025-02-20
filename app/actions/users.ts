@@ -120,6 +120,9 @@ export async function deleteUser(uid: string) {
 
 export async function getUserProgress(userId: string) {
   try {
+    if (!userId) {
+      throw new Error("User ID is required");
+    }
     const docSnap = await getDoc(doc(userProgressCollection, userId));
     return { id: docSnap.id, ...docSnap.data() } as TUserProgress;
   } catch (error) {
