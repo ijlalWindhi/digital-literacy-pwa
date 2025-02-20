@@ -9,9 +9,15 @@ export function useLearns(category?: TLearnCategory) {
   });
 }
 
-export function useRecentLearns(limitCount = 3) {
+export function useRecentLearns({
+  limitCount = 3,
+  userId,
+}: {
+  limitCount?: number;
+  userId: string;
+}) {
   return useQuery({
     queryKey: ["recent-learns", limitCount],
-    queryFn: () => getRecentLearns(limitCount),
+    queryFn: () => getRecentLearns({ limitCount, userId }),
   });
 }

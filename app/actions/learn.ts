@@ -1,14 +1,8 @@
 "use server";
 
-import {
-  collection,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 
+import { getUserProgress } from "./users";
 import { db } from "@/utils/firebase";
 import { TCourse, TLearnCategory } from "@/types";
 
@@ -38,14 +32,44 @@ export async function getLearns(category?: TLearnCategory) {
   }
 }
 
-export async function getRecentLearns(limitCount = 3) {
-  const q = query(
+export async function getRecentLearns({
+  limitCount = 3,
+  userId,
+}: {
+  limitCount?: number;
+  userId: string;
+}) {
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
+  const userProgress = await getUserProgress(userId);
+
+  // Cek apakah courses_progress ada dan tidak kosong
+  if (!userProgress?.courses_progress?.length) {
+    return [];
+  }
+
+  const recentLearnIds = userProgress.courses_progress
+    .toSorted((a, b) => {
+      const dateA = new Date(a.last_accessed).getTime();
+      const dateB = new Date(b.last_accessed).getTime();
+      return dateB - dateA;
+    })
+    .slice(0, limitCount)
+    .map((progress) => progress.course_id);
+
+  // Cek apakah ada IDs untuk di-query
+  if (!recentLearnIds.length) {
+    return [];
+  }
+
+  const recentLearnQuery = query(
     learnsCollection,
-    orderBy("created_at", "desc"),
-    limit(limitCount),
+    where("id", "in", recentLearnIds),
   );
 
-  const snapshot = await getDocs(q);
+  const snapshot = await getDocs(recentLearnQuery);
   return snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
