@@ -7,7 +7,7 @@ export type TLearnCategory =
   | "dev-sec";
 
 export type TLearnCategoryMetadata = {
-  id: string;
+  id: TLearnCategory;
   title: string;
   description: string;
   icon: LucideIcon;

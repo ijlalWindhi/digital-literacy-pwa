@@ -45,6 +45,7 @@ export type TUserProgress = {
     id: string;
     name: string;
     earned_at: string;
+    type: "quiz" | "course";
   }[];
 };
 
