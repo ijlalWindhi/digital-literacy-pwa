@@ -32,6 +32,7 @@ export type TCourse = {
   total_modules: number;
   level: "Pemula" | "Menengah" | "Lanjutan";
   prerequisites?: string[];
+  knowledge?: string[];
   created_at: string;
   updated_at: string;
   is_active: boolean;
@@ -42,38 +43,27 @@ export type TModule = {
   course_id: string;
   title: string;
   description: string;
-  duration_minutes: number;
+  duration: number;
   points: number;
-  total_chapters: number;
-  prerequisites: {
-    modules: string[];
-    knowledge: string[];
+  prerequisites: string[];
+  video: {
+    url: string;
+    thumbnail: string;
+    duration: string;
   };
-  created_at: string;
-  updated_at: string;
-  is_active: boolean;
-};
-
-export type TChapter = {
-  id: string;
-  module_id: string;
-  title: string;
-  description: string;
-  duration_minutes: number;
-  type: "video" | "text" | "quiz" | "practice";
-  content: {
-    video_url?: string;
-    text_content?: string;
-    attachments?: {
+  reading: {
+    sections: {
+      title: string;
+      content: string;
+    }[];
+    resources: {
       name: string;
-      url: string;
       size: string;
-      type: string;
+      link: string;
     }[];
   };
   created_at: string;
   updated_at: string;
-  order: number;
   is_active: boolean;
 };
 
@@ -81,12 +71,12 @@ export type TModuleAttempt = {
   id: string;
   user_id: string;
   module_id: string;
+  course_id: string;
   start_time: string;
+  completion_time?: string;
   last_accessed: string;
   time_spent: string;
   status: "not_started" | "in_progress" | "completed";
-  progress_percentage: number;
-  completed_chapters: string[];
   points_earned: number;
 };
 

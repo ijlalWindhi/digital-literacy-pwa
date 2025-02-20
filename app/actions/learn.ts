@@ -1,6 +1,14 @@
 "use server";
 
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 
 import { getUserProgress } from "./users";
 import { db } from "@/utils/firebase";
@@ -74,4 +82,15 @@ export async function getRecentLearns({
     id: doc.id,
     ...doc.data(),
   })) as TCourse[];
+}
+
+export async function getLearn(learnId: string) {
+  try {
+    const docSnap = await getDoc(doc(db, "learns", learnId));
+    return { id: docSnap.id, ...docSnap.data() } as TCourse;
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "An unknown error occurred",
+    );
+  }
 }
