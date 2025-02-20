@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { useUserProgress, useQuizzes } from "@/hooks/use-quizzes";
+import { useQuizzes } from "@/hooks/use-quizzes";
+import { useUserProgress } from "@/hooks/use-users";
 import useAuth from "@/stores/auth";
 import { levelMapping } from "@/utils/quiz-calculate";
 

@@ -6,7 +6,6 @@ import {
   getQuizQuestions,
   getQuizAttempts,
   submitQuiz,
-  getUserProgress,
 } from "@/app/actions/quiz";
 import { ISubmitQuizParams, TQuizCategory } from "@/types";
 
@@ -42,13 +41,6 @@ export function useQuizAttempts(quizId: string) {
   return useQuery({
     queryKey: ["quiz-attempts", quizId],
     queryFn: () => getQuizAttempts(quizId),
-  });
-}
-
-export function useUserProgress(userId: string) {
-  return useQuery({
-    queryKey: ["user-progress", userId],
-    queryFn: () => getUserProgress(userId),
   });
 }
 

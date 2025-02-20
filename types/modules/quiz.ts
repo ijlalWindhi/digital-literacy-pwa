@@ -86,10 +86,3 @@ export interface ISubmitQuizParams {
   time_spend: string;
   quizData: TQuiz;
 }
-
-export interface IUpdateUserProgressParams {
-  userId: string;
-  quizId: string;
-  score: number;
-  quizData: TQuiz;
-}

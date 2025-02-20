@@ -11,23 +11,20 @@ import {
   getDoc,
   limit,
   addDoc,
-  updateDoc,
 } from "firebase/firestore";
 import {
   TQuiz,
   TQuizCategory,
-  TUserProgress,
   TQuestion,
   TQuizAttempt,
   ISubmitQuizParams,
-  IUpdateUserProgressParams,
 } from "@/types";
-import { calculateLevel, calculateQuizResults } from "@/utils/quiz-calculate";
+import { calculateQuizResults } from "@/utils/quiz-calculate";
+import { updateUserProgress } from "./users";
 
 const quizzesCollection = collection(db, "quizs");
 const quizzesQuestionCollection = collection(db, "quizzes_question");
 const quizzesAttempts = collection(db, "quizzes_attempts");
-const userProgressCollection = collection(db, "users_progress");
 
 export async function getQuizzes(category?: TQuizCategory) {
   try {
@@ -152,80 +149,3 @@ export async function getQuizAttempts(attemptId: string) {
     );
   }
 }
-
-export async function getUserProgress(userId: string) {
-  try {
-    const docSnap = await getDoc(doc(userProgressCollection, userId));
-    return { id: docSnap.id, ...docSnap.data() } as TUserProgress;
-  } catch (error) {
-    throw new Error(
-      error instanceof Error ? error.message : "An unknown error occurred",
-    );
-  }
-}
-
-const updateUserProgress = async ({
-  userId,
-  quizId,
-  score,
-}: IUpdateUserProgressParams) => {
-  const userProgressRef = doc(userProgressCollection, userId);
-  const userProgressDoc = await getDoc(userProgressRef);
-
-  if (!userProgressDoc.exists()) {
-    await updateDoc(userProgressRef, {
-      total_points: score,
-      current_level: calculateLevel(score),
-      completed_quizzes: [
-        {
-          quiz_id: quizId,
-          highest_score: score,
-          attempts: 1,
-          last_attempt_date: new Date().toISOString(),
-        },
-      ],
-      achievements: [],
-    });
-  } else {
-    const existingProgress = userProgressDoc.data() as TUserProgress;
-    const existingQuizIndex = existingProgress.completed_quizzes.findIndex(
-      (q) => q.quiz_id === quizId,
-    );
-
-    if (existingQuizIndex === -1) {
-      // First attempt for this quiz - append to existing completed_quizzes
-      await updateDoc(userProgressRef, {
-        total_points: Number(
-          Number(existingProgress.total_points) + Number(score),
-        ),
-        completed_quizzes: [
-          ...existingProgress.completed_quizzes,
-          {
-            quiz_id: quizId,
-            highest_score: score,
-            attempts: 1,
-            last_attempt_date: new Date().toISOString(),
-          },
-        ],
-        current_level: calculateLevel(existingProgress.total_points + score),
-      });
-    } else {
-      // Update existing quiz progress
-      const updatedQuizzes = [...existingProgress.completed_quizzes];
-      const existingQuiz = updatedQuizzes[existingQuizIndex];
-
-      updatedQuizzes[existingQuizIndex] = {
-        ...existingQuiz,
-        highest_score: Math.max(existingQuiz.highest_score, score),
-        attempts: existingQuiz.attempts + 1,
-        last_attempt_date: new Date().toISOString(),
-      };
-
-      await updateDoc(userProgressRef, {
-        total_points: existingProgress.total_points + score,
-        completed_quizzes: updatedQuizzes,
-        current_level: calculateLevel(existingProgress.total_points + score),
-      });
-    }
-  }
-};
