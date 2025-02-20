@@ -1,9 +1,57 @@
 import React from "react";
-import { Award, Target } from "lucide-react";
+import { Award, Target, Trophy } from "lucide-react";
 
 import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
+
+import { useUserProgress } from "@/hooks/use-users";
+import { useLearns } from "@/hooks/use-learn";
+import useAuth from "@/stores/auth";
+import { levelMapping } from "@/utils/quiz-calculate";
 
 export default function LearnHeader() {
+  // variables
+  const { me } = useAuth();
+  const { data: progress, isLoading: isLoadingUser } = useUserProgress(me?.uid);
+  const { data: course, isLoading } = useLearns();
+  const nextLevelInfo = getNextLevelProgress(progress?.total_points ?? 0);
+
+  // functions
+  function getNextLevelProgress(currentPoints: number) {
+    const levels = Object.entries(levelMapping);
+
+    // Find current level index
+    const currentLevelIndex = levels.findIndex(
+      ([_, threshold]) => currentPoints < threshold,
+    );
+
+    // If at max level
+    if (currentLevelIndex === -1) {
+      return {
+        nextLevel: levels[levels.length - 1][0],
+        nextThreshold: levels[levels.length - 1][1],
+        progress: 100,
+      };
+    }
+
+    // Get current and next level info
+    const prevThreshold =
+      currentLevelIndex > 0 ? levels[currentLevelIndex - 1][1] : 0;
+    const nextLevel = levels[currentLevelIndex][0];
+    const nextThreshold = levels[currentLevelIndex][1];
+
+    // Calculate progress percentage
+    const progressPoints = currentPoints - prevThreshold;
+    const totalNeeded = nextThreshold - prevThreshold;
+    const progress = (progressPoints / totalNeeded) * 100;
+
+    return {
+      nextLevel,
+      nextThreshold,
+      progress,
+    };
+  }
+
   return (
     <div className="relative mb-12 overflow-hidden rounded-2xl bg-white p-6 shadow-lg">
       <div className="absolute right-0 top-0 h-64 w-64 opacity-10">
@@ -19,7 +67,7 @@ export default function LearnHeader() {
       <div className="flex flex-col md:flex-row gap-4 md:gap-8">
         <div className="flex-1">
           <div className="mb-3 md:mb-6 flex items-center gap-2">
-            <Target className="h-5 w-5 text-indigo-600" />
+            <Target className="h-5 w-5 text-blue-500" />
             <h2 className="text-sm md:text-lg font-semibold leading-none tracking-tight">
               Progress Belajar
             </h2>
@@ -28,31 +76,56 @@ export default function LearnHeader() {
             <div>
               <div className="mb-2 flex justify-between text-xs md:text-sm">
                 <span className="text-gray-600">Modul Selesai</span>
-                <span className="font-medium">15/45</span>
+                <span className="font-medium">
+                  {isLoadingUser
+                    ? "..."
+                    : (progress?.courses_progress?.length ?? 0)}{" "}
+                  / {isLoading ? "..." : course?.length}
+                </span>
               </div>
-              <Progress value={33} className="h-2" />
+              {isLoading ? (
+                <Skeleton className="h-2" />
+              ) : (
+                <Progress
+                  value={
+                    ((progress?.courses_progress?.length ?? 0) /
+                      (course?.length ?? 0)) *
+                    100
+                  }
+                  className="h-2"
+                />
+              )}
             </div>
-            <div>
-              <div className="mb-2 flex justify-between text-xs md:text-sm">
-                <span className="text-gray-600">Total Poin</span>
-                <span className="font-medium">1500/2000</span>
+            <div className="space-y-2 text-xs md:text-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <Trophy className="h-5 w-5 text-yellow-500 mr-2" />
+                  <span>Total Poin</span>
+                </div>
+                <span className="font-semibold">
+                  {progress?.total_points ?? 0}
+                </span>
               </div>
-              <Progress value={75} className="h-2" />
             </div>
           </div>
         </div>
         <div className="flex-1">
           <div className="mb-3 md:mb-6 flex items-center gap-2">
-            <Award className="h-5 w-5 text-indigo-600" />
+            <Award className="h-5 w-5 text-blue-500" />
             <h2 className="text-sm md:text-lg font-semibold leading-none tracking-tight">
-              Level 6
+              Level {progress?.current_level ?? "-"}
             </h2>
           </div>
           <div className="rounded-lg bg-indigo-50 p-2 md:p-4 text-xs md:text-sm">
-            <div className="mb-2 text-gray-600">Menuju Level 7</div>
-            <Progress value={75} className="h-2" />
-            <div className="mt-2 text-right font-medium text-indigo-600">
-              1500/2000 XP
+            <div className="mb-2 text-gray-600">
+              Menuju Level{" "}
+              <span className="font-semibold text-primary">
+                {nextLevelInfo.nextLevel}
+              </span>
+            </div>
+            <Progress value={nextLevelInfo.progress} className="h-2" />
+            <div className="mt-2 text-right font-medium text-blue-500">
+              {progress?.total_points ?? 0} / {nextLevelInfo.nextThreshold}
             </div>
           </div>
         </div>
