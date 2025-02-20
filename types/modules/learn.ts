@@ -69,7 +69,7 @@ export type TModule = {
 };
 
 export type TModuleAttempt = {
-  id: string;
+  id?: string;
   user_id: string;
   module_id: string;
   course_id: string;

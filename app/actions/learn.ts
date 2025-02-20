@@ -1,6 +1,7 @@
 "use server";
 
 import {
+  addDoc,
   collection,
   doc,
   getDoc,
@@ -128,7 +129,34 @@ export async function getModule(moduleId: string) {
   }
 }
 
-export async function getModuleProgress(userId: string, module_id: string) {
+export async function getModuleProgress(userId: string, course_id: string) {
+  if (!userId || !course_id) {
+    throw new Error("User ID and Module ID are required");
+  }
+
+  try {
+    const progressQuery = query(
+      moduleAttemptsCollection,
+      where("user_id", "==", userId),
+      where("course_id", "==", course_id),
+    );
+
+    const snapshot = await getDocs(progressQuery);
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as TModuleAttempt[];
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "An unknown error occurred",
+    );
+  }
+}
+
+export async function getModuleProgressByModuleId(
+  userId: string,
+  module_id: string,
+) {
   if (!userId || !module_id) {
     throw new Error("User ID and Module ID are required");
   }
@@ -137,7 +165,7 @@ export async function getModuleProgress(userId: string, module_id: string) {
     const progressQuery = query(
       moduleAttemptsCollection,
       where("user_id", "==", userId),
-      where("course_id", "==", module_id),
+      where("module_id", "==", module_id),
     );
 
     const snapshot = await getDocs(progressQuery);
@@ -145,6 +173,37 @@ export async function getModuleProgress(userId: string, module_id: string) {
       id: doc.id,
       ...doc.data(),
     })) as TModuleAttempt[];
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "An unknown error occurred",
+    );
+  }
+}
+
+export async function addModuleProgress(data: TModuleAttempt) {
+  try {
+    const { user_id, course_id, module_id } = data;
+    const progressQuery = query(
+      moduleAttemptsCollection,
+      where("user_id", "==", user_id),
+      where("course_id", "==", course_id),
+      where("module_id", "==", module_id),
+    );
+
+    const snapshot = await getDocs(progressQuery);
+
+    if (!snapshot.empty) {
+      throw new Error(
+        "Progress already exists for this user, course, and module",
+      );
+    }
+
+    const docRef = await addDoc(moduleAttemptsCollection, data);
+    await updateDoc(docRef, {
+      id: docRef.id,
+    });
+
+    return docRef.id;
   } catch (error) {
     throw new Error(
       error instanceof Error ? error.message : "An unknown error occurred",

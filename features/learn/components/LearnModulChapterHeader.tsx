@@ -94,7 +94,7 @@ export default function LearnModulChapterHeader({
                   <Skeleton className="h-6 w-20" />
                 ) : (
                   <span>
-                    {(moduleProgress.filter((p) => p.module_id === module?.id)
+                    {(moduleProgress?.filter((p) => p.status === "completed")
                       .length /
                       (modules?.length ?? 0)) *
                       100}
@@ -107,7 +107,7 @@ export default function LearnModulChapterHeader({
               ) : (
                 <Progress
                   value={
-                    (moduleProgress.filter((p) => p.module_id === module?.id)
+                    (moduleProgress?.filter((p) => p.status === "completed")
                       .length /
                       (modules?.length ?? 0)) *
                     100

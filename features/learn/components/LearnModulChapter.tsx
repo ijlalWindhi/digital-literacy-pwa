@@ -10,7 +10,9 @@ import ChapterNavigation from "./LearnModulChapterNavigation";
 import {
   useModuleByLearn,
   useModuleProgress,
+  useModuleProgressByModuleId,
   useModule,
+  useAddModuleProgress,
   useUpdateModuleProgress,
 } from "@/hooks/use-learn";
 import useAuth from "@/stores/auth";
@@ -28,23 +30,30 @@ export default function LearnModulChapter({
   const { data: module, isLoading } = useModule(chapterId);
   const { data: moduleData } = useModuleByLearn(modulId);
   const { data: moduleProgress } = useModuleProgress(me?.uid, modulId);
+  const { data: chapterProgress } = useModuleProgressByModuleId(
+    me?.uid,
+    chapterId,
+  );
   const updateProgress = useUpdateModuleProgress();
+  const addProgress = useAddModuleProgress();
   const router = useRouter();
   const [showNotes, setShowNotes] = useState(false);
-
   const currentProgress = moduleProgress?.find(
     (attempt) => attempt.module_id === chapterId,
   );
 
+  // functions
   const handleMarkComplete = async () => {
     if (!currentProgress || !me?.uid) return;
 
     try {
       await updateProgress.mutateAsync({
-        attemptId: currentProgress.id,
+        attemptId: currentProgress.id as string,
         data: {
           status: "completed",
           completion_time: new Date().toISOString(),
+          points_earned: module?.points ?? 0,
+          time_spent: module?.duration.toString() ?? "0",
         } as Partial<TModuleAttempt>,
       });
     } catch (error) {
@@ -63,6 +72,31 @@ export default function LearnModulChapter({
       router.push(`/learn/modul/${modulId}/chapter/${moduleData[newIndex].id}`);
     }
   };
+
+  async function initializeProgress() {
+    try {
+      if (!chapterProgress && me?.uid) {
+        addProgress.mutate({
+          user_id: me.uid,
+          module_id: chapterId,
+          course_id: modulId,
+          status: "in_progress",
+          start_time: new Date().toISOString(),
+          last_accessed: new Date().toISOString(),
+          time_spent: "0",
+          points_earned: 0,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to initialize progress:", error);
+    }
+  }
+
+  // lifecycle
+  useEffect(() => {
+    initializeProgress();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [me, chapterProgress]);
 
   return (
     <div className="container mx-auto py-6 px-4">

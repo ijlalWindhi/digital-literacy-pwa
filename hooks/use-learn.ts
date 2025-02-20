@@ -6,6 +6,8 @@ import {
   getModuleByLearn,
   getModule,
   getModuleProgress,
+  getModuleProgressByModuleId,
+  addModuleProgress,
   updateModuleProgress,
 } from "@/app/actions/learn";
 import { TLearnCategory, TModuleAttempt } from "@/types";
@@ -51,10 +53,30 @@ export function useModule(moduleId: string) {
   });
 }
 
-export function useModuleProgress(userId: string, modulId: string) {
+export function useModuleProgress(userId: string, courseId: string) {
   return useQuery({
-    queryKey: ["module-progress", userId, modulId],
-    queryFn: () => getModuleProgress(userId, modulId),
+    queryKey: ["module-progress", userId, courseId],
+    queryFn: () => getModuleProgress(userId, courseId),
+  });
+}
+
+export function useModuleProgressByModuleId(userId: string, moduleId: string) {
+  return useQuery({
+    queryKey: ["module-progress-by-module-id", moduleId],
+    queryFn: () => getModuleProgressByModuleId(userId, moduleId),
+  });
+}
+
+export function useAddModuleProgress() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: TModuleAttempt) => addModuleProgress(data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["module-progress"],
+      });
+    },
   });
 }
 

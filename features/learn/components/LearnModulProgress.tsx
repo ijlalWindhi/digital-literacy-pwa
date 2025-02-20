@@ -13,6 +13,7 @@ import {
   useLearn,
 } from "@/hooks/use-learn";
 import useAuth from "@/stores/auth";
+import { formatMinutesToHoursAndMinutes } from "@/utils/format-time";
 
 export default function LearnModulProgress({
   modulId,
@@ -43,10 +44,12 @@ export default function LearnModulProgress({
                   {isLoading ? (
                     <Skeleton className="h-4 w-16" />
                   ) : (
-                    (progress?.reduce(
-                      (acc, curr) => acc + Number(curr.time_spent),
-                      0,
-                    ) ?? 0)
+                    formatMinutesToHoursAndMinutes(
+                      progress?.reduce(
+                        (acc, curr) => acc + Number(curr.time_spent),
+                        0,
+                      ) ?? 0,
+                    )
                   )}
                 </span>
               </div>
@@ -60,7 +63,9 @@ export default function LearnModulProgress({
                   <Skeleton className="h-4 w-16" />
                 ) : (
                   <span className="font-semibold">
-                    {progress?.length ?? 0} / {modules?.length ?? 0}
+                    {progress?.filter((e) => e.status === "completed")
+                      ?.length ?? 0}{" "}
+                    / {modules?.length ?? 0}
                   </span>
                 )}
               </div>
@@ -92,9 +97,9 @@ export default function LearnModulProgress({
                 ) : (
                   <span>
                     {progress?.reduce(
-                      (total, learn) => total + Number(learn.time_spent),
+                      (acc, curr) => acc + Number(curr.points_earned),
                       0,
-                    ) ?? 0}{" "}
+                    )}{" "}
                     / {module?.total_points ?? 0}
                   </span>
                 )}
@@ -104,10 +109,12 @@ export default function LearnModulProgress({
               ) : (
                 <Progress
                   value={
-                    (progress?.reduce(
-                      (total, learn) => total + Number(learn.time_spent),
+                    ((progress?.reduce(
+                      (acc, curr) => acc + Number(curr.points_earned),
                       0,
-                    ) ?? 0) * 100
+                    ) ?? 0) /
+                      (module?.total_points ?? 1)) *
+                    100
                   }
                 />
               )}
@@ -144,7 +151,7 @@ export default function LearnModulProgress({
                 <div className="flex-1">
                   <p className="text-sm">
                     {modules?.find((e) => e.id === activity.module_id)?.title}{" "}
-                    <span className="font-medium">
+                    <span className="font-medium text-yellow-500">
                       {activity.points_earned}
                     </span>
                   </p>
