@@ -7,14 +7,17 @@ import {
   getDocs,
   orderBy,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 
 import { getUserProgress } from "./users";
 import { db } from "@/utils/firebase";
-import { TCourse, TLearnCategory } from "@/types";
+import { TCourse, TLearnCategory, TModule, TModuleAttempt } from "@/types";
 
 const learnsCollection = collection(db, "learns");
+const modulesCollection = collection(db, "learns_module");
+const moduleAttemptsCollection = collection(db, "learns_module_attempts");
 
 export async function getLearns(category?: TLearnCategory) {
   try {
@@ -88,6 +91,66 @@ export async function getLearn(learnId: string) {
   try {
     const docSnap = await getDoc(doc(db, "learns", learnId));
     return { id: docSnap.id, ...docSnap.data() } as TCourse;
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "An unknown error occurred",
+    );
+  }
+}
+
+export async function getModuleByLearn(learnId: string) {
+  try {
+    const moduleQuery = query(
+      modulesCollection,
+      where("course_id", "==", learnId),
+    );
+    const snapshot = await getDocs(moduleQuery);
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as TModule[];
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "An unknown error occurred",
+    );
+  }
+}
+
+export async function getModuleProgress(userId: string, module_id: string) {
+  if (!userId || !module_id) {
+    throw new Error("User ID and Module ID are required");
+  }
+
+  try {
+    const progressQuery = query(
+      moduleAttemptsCollection,
+      where("user_id", "==", userId),
+      where("course_id", "==", module_id),
+    );
+
+    const snapshot = await getDocs(progressQuery);
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as TModuleAttempt[];
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "An unknown error occurred",
+    );
+  }
+}
+
+export async function updateModuleProgress(
+  attemptId: string,
+  data: Partial<TModuleAttempt>,
+) {
+  try {
+    const docRef = doc(moduleAttemptsCollection, attemptId);
+    await updateDoc(docRef, {
+      ...data,
+      last_accessed: new Date().toISOString(),
+    });
+    return true;
   } catch (error) {
     throw new Error(
       error instanceof Error ? error.message : "An unknown error occurred",
