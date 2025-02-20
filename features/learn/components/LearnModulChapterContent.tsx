@@ -37,10 +37,11 @@ export default function LearnModulChapterContent({
               {isLoading ? (
                 <Skeleton className="absolute inset-0" />
               ) : (
-                <iframe
+                <video
                   src={module?.video?.url}
-                  title="Video"
-                  className="absolute inset-0 w-full h-full"
+                  poster={module?.video?.thumbnail}
+                  controls
+                  className="w-full h-full object-cover"
                 />
               )}
             </div>
