@@ -11,23 +11,19 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const moduleSample = {
-  title: "Pengenalan Cloud Computing",
-  description:
-    "Pelajari konsep dasar cloud computing dan implementasinya dalam dunia digital modern",
-  category: "Konsep Dasar",
-  duration: "45 menit",
-  chapters: 5,
-  points: 100,
-  prerequisites: ["Pengenalan Komputer", "Dasar Internet"],
-};
+import { useLearn } from "@/hooks/use-learn";
+import { formatMinutesToHoursAndMinutes } from "@/utils/format-time";
 
 export default function LearnModulHeader({
   modulId,
 }: Readonly<{
   modulId: string;
 }>) {
+  // variables
+  const { data: module, isLoading } = useLearn(modulId);
+
   return (
     <div className="space-y-4">
       <Link href="/learn">
@@ -39,31 +35,52 @@ export default function LearnModulHeader({
 
       <Card>
         <CardHeader>
-          <div className="flex flex-wrap gap-2 mb-2">
-            <Badge>{moduleSample.category}</Badge>
-            <Badge variant="outline">
-              <Clock className="h-4 w-4 mr-1" />
-              {moduleSample.duration}
-            </Badge>
-            <Badge variant="outline">
-              <BookOpen className="h-4 w-4 mr-1" />
-              {moduleSample.chapters} Bab
-            </Badge>
-            <Badge variant="outline">
-              <Trophy className="h-4 w-4 mr-1" />
-              {moduleSample.points} Poin
-            </Badge>
-          </div>
-          <CardTitle className="text-base md:text-lg">
-            {moduleSample.title}
-          </CardTitle>
-          <CardDescription>{moduleSample.description}</CardDescription>
+          {isLoading ? (
+            <>
+              <div className="flex flex-wrap gap-2 mb-2">
+                <Skeleton className="w-20 h-6" />
+                <Skeleton className="w-20 h-6" />
+                <Skeleton className="w-20 h-6" />
+                <Skeleton className="w-20 h-6" />
+              </div>
+              <Skeleton className="w-1/2 h-6" />
+              <Skeleton className="w-full h-4" />
+            </>
+          ) : (
+            <>
+              <div className="flex flex-wrap gap-2 mb-2">
+                <Badge>{module?.category?.name ?? "-"}</Badge>
+                <Badge variant="outline">
+                  <Clock className="h-4 w-4 mr-1" />
+                  {formatMinutesToHoursAndMinutes(module?.duration ?? 0)}
+                </Badge>
+                <Badge variant="outline">
+                  <BookOpen className="h-4 w-4 mr-1" />
+                  {module?.total_modules ?? 0} Bab
+                </Badge>
+                <Badge variant="outline">
+                  <Trophy className="h-4 w-4 mr-1" />
+                  {module?.total_points ?? 0} Poin
+                </Badge>
+              </div>
+              <CardTitle className="text-base md:text-lg">
+                {module?.title ?? "-"}
+              </CardTitle>
+              <CardDescription>{module?.description ?? "-"}</CardDescription>
+            </>
+          )}
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
             <h3 className="text-sm md:text-base font-semibold">Prasyarat:</h3>
+            {isLoading && <Skeleton className="w-full h-4" />}
+            {module?.knowledge?.length === 0 && !isLoading && (
+              <p className="text-xs md:text-sm text-muted-foreground">
+                Tidak ada prasyarat
+              </p>
+            )}
             <ul className="text-xs md:text-sm list-disc list-inside space-y-1">
-              {moduleSample.prerequisites.map((prereq, index) => (
+              {module?.knowledge?.map((prereq, index) => (
                 <li key={index} className="text-muted-foreground">
                   {prereq}
                 </li>
