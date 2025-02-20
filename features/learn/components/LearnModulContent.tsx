@@ -1,73 +1,36 @@
 import React from "react";
 import Link from "next/link";
-import {
-  CheckCircle,
-  Circle,
-  PlayCircle,
-  FileText,
-  Download,
-} from "lucide-react";
+import { CheckCircle, Circle } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const chapters = [
-  {
-    id: 1,
-    title: "Apa itu Cloud Computing?",
-    type: "video",
-    duration: "10 menit",
-    completed: true,
-  },
-  {
-    id: 2,
-    title: "Jenis-jenis Layanan Cloud",
-    type: "reading",
-    duration: "15 menit",
-    completed: true,
-  },
-  {
-    id: 3,
-    title: "Manfaat Cloud Computing",
-    type: "video",
-    duration: "8 menit",
-    completed: false,
-  },
-  {
-    id: 4,
-    title: "Latihan: Implementasi Cloud",
-    type: "exercise",
-    duration: "20 menit",
-    completed: false,
-  },
-  {
-    id: 5,
-    title: "Studi Kasus Cloud Computing",
-    type: "reading",
-    duration: "12 menit",
-    completed: false,
-  },
-];
+import useAuth from "@/stores/auth";
+import { useModuleByLearn, useModuleProgress } from "@/hooks/use-learn";
+import { formatMinutesToHoursAndMinutes } from "@/utils/format-time";
 
 export default function LearnModulContent({
   modulId,
 }: Readonly<{
   modulId: string;
 }>) {
-  const getChapterIcon = (type: string, completed: boolean) => {
-    if (completed) return <CheckCircle className="h-5 w-5 text-green-500" />;
+  // variables
+  const { me } = useAuth();
+  const { data: modules, isLoading } = useModuleByLearn(modulId);
+  const { data: progress } = useModuleProgress(me?.uid, modulId);
 
-    switch (type) {
-      case "video":
-        return <PlayCircle className="h-5 w-5 text-blue-500" />;
-      case "reading":
-        return <FileText className="h-5 w-5 text-purple-500" />;
-      case "exercise":
-        return <Circle className="h-5 w-5 text-orange-500" />;
-      default:
-        return <Circle className="h-5 w-5" />;
-    }
+  const getChapterIcon = (
+    status: "not_started" | "in_progress" | "completed",
+  ) => {
+    if (status === "completed")
+      return <CheckCircle className="h-5 w-5 text-green-500" />;
+
+    if (status === "in_progress")
+      return <Circle className="h-5 w-5 text-yellow-500" />;
+
+    return <Circle className="h-5 w-5 text-red-500" />;
   };
 
   return (
@@ -77,10 +40,6 @@ export default function LearnModulContent({
           <CardTitle className="text-base md:text-lg">
             Konten Pembelajaran
           </CardTitle>
-          <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            Unduh Materi
-          </Button>
         </div>
       </CardHeader>
       <CardContent>
@@ -88,21 +47,44 @@ export default function LearnModulContent({
           <div>
             <div className="flex justify-between text-xs md:text-sm mb-2">
               <span>Progress Modul</span>
-              <span>
-                {chapters.filter((c) => c.completed).length} / {chapters.length}{" "}
-                Selesai
-              </span>
+              {isLoading ? (
+                <Skeleton className="h-6 w-20" />
+              ) : (
+                <span>
+                  {progress?.length ?? 0} / {modules?.length ?? 0} Selesai
+                </span>
+              )}
             </div>
-            <Progress
-              value={
-                (chapters.filter((c) => c.completed).length / chapters.length) *
-                100
-              }
-            />
+            {isLoading ? (
+              <Skeleton className="w-full h-4" />
+            ) : (
+              <Progress
+                value={
+                  ((progress?.filter((p) => p.status === "completed").length ??
+                    0) /
+                    (modules?.length ?? 1)) *
+                  100
+                }
+              />
+            )}
           </div>
 
           <div className="space-y-2">
-            {chapters.map((chapter) => (
+            {isLoading && (
+              <div className="animate-pulse space-y-4">
+                {[...Array(3)].map((_, idx) => (
+                  <Skeleton key={idx} className="rounded-lg h-24" />
+                ))}
+              </div>
+            )}
+
+            {!modules?.length && !isLoading && (
+              <div className="text-xs md:text-sm text-center text-muted-foreground">
+                Belum ada modul yang tersedia
+              </div>
+            )}
+
+            {modules?.map((chapter) => (
               <Link
                 key={chapter.id}
                 href={`/learn/modul/${modulId}/chapter/${chapter.id}`}
@@ -112,11 +94,14 @@ export default function LearnModulContent({
                   className="w-full justify-start h-auto py-4 px-4"
                 >
                   <div className="flex items-start gap-4">
-                    {getChapterIcon(chapter.type, chapter.completed)}
+                    {getChapterIcon(
+                      progress?.find((p) => p.module_id === chapter.id)
+                        ?.status ?? "not_started",
+                    )}
                     <div className="flex-1 text-left">
                       <div className="font-medium">{chapter.title}</div>
                       <div className="text-sm text-muted-foreground">
-                        {chapter.duration}
+                        {formatMinutesToHoursAndMinutes(chapter.duration)}{" "}
                       </div>
                     </div>
                   </div>
