@@ -18,7 +18,7 @@ export default function Login() {
         <p className="text-primary text-xs sm:text-sm md:text-base">
           AYO MULAI👋
         </p>
-        <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold">
+        <h1 className="sm:text-2xl md:text-3xl lg:text-4xl font-semibold">
           Selamat Datang Kembali🎉 <br />
           Kami Senang Bertemu Anda
         </h1>

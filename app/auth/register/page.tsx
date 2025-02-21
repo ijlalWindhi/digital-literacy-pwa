@@ -13,12 +13,12 @@ export const metadata: Metadata = {
 
 export default function Register() {
   return (
-    <div className="space-y-4 md:space-y-8 w-full p-4">
+    <div className="space-y-4 md:space-y-8 w-full p-4 mt-32 sm:mt-0">
       <div className="text-center space-y-2">
         <p className="text-primary text-xs sm:text-sm md:text-base">
           HAI KAWAN, SELAMAT DATANG👋
         </p>
-        <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold">
+        <h1 className="sm:text-2xl md:text-3xl lg:text-4xl font-semibold">
           Selamat Datang di{" "}
           <span className="text-primary">Digital Literacy</span>
           <br />
