@@ -97,7 +97,7 @@ export default function LearnModulChapterContent({
                     <Button
                       key={index}
                       variant="outline"
-                      className="w-full justify-start"
+                      className="w-full h-auto justify-start flex-wrap"
                     >
                       <Download className="h-4 w-4 mr-2" />
                       <span className="flex-1 text-left">{resource.name}</span>
